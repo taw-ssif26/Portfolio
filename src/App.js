@@ -697,7 +697,7 @@ export default function Portfolio() {
             }}
           >
             <img
-              src="https://imgur.com/a/uMlw2W0"
+              src="/1000056406.jpg"
               alt="Md. Abu Tawsif"
               style={{
                 width: 56,
