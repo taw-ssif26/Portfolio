@@ -374,6 +374,21 @@ const CASES = [
         "Telegram → n8n → Claude API → FastAPI → PostgreSQL → Reminder Scheduler",
     },
   },
+  {
+    tag: "Problem",
+    title: "Fragile Web Scraping Workflows",
+    body: "Traditional web scraping requires custom code for every website. When site structures change, scripts break, leading to high maintenance costs and data gaps for businesses relying on web data.",
+    result:
+      "AI-driven extraction that adapts to layout changes automatically.",
+    detail: {
+      challenge:
+        "Building a system that can understand intent from natural language and map it to dynamic web elements without manual selector mapping for every new site.",
+      solution:
+        "Hybrid extraction engine using LLMs for initial structure identification and cached CSS selectors for speed, with automatic fallback for complex sites.",
+      architecture:
+        "Natural Language Input → Playwright → Groq (Llama 3) → Dynamic Selector Engine → Railway",
+    },
+  },
 ];
 
 function LoadingScreen({ done }) {
@@ -988,6 +1003,75 @@ export default function Portfolio() {
                     "Output (JSON / CSV)",
                   ]}
                 />
+              </div>
+            </div>
+          </div>
+          <div className="project-card">
+            <div className="project-num">PROJECT 04 — SCRAPERAI</div>
+            <div className="project-inner">
+              <div>
+                <h3 className="project-h3">
+                  ScraperAI — AI-Powered
+                  <br />
+                  Web Extraction Tool
+                </h3>
+                <p className="project-tagline">
+                  A full-stack web scraping platform that uses AI to automatically extract structured data from any website. Describe what you want in plain English and the system figures out the rest.
+                </p>
+                <ul className="feat-list">
+                  <li>Natural language task input — no code required</li>
+                  <li>Intelligent structure caching — one LLM call per site</li>
+                  <li>Hybrid extraction — CSS selectors with LLM fallback</li>
+                  <li>URL pattern support for pagination and directories</li>
+                  <li>Captcha and block detection with live data preview</li>
+                </ul>
+                <div className="stack-badges">
+                  {[
+                    "Python",
+                    "FastAPI",
+                    "Playwright",
+                    "Groq API",
+                    "Llama 3",
+                    "Railway",
+                  ].map((b) => (
+                    <span className="badge" key={b}>
+                      {b}
+                    </span>
+                  ))}
+                </div>
+                <div className="project-btns">
+                  <a className="btn-sm outline" href="#">
+                    GitHub
+                  </a>
+                  <a className="btn-sm outline" href="#">
+                    Live Demo
+                  </a>
+                </div>
+              </div>
+              <div>
+                <FlowDiagram
+                  nodes={[
+                    "User Input (English)",
+                    "Browser Automation (Playwright)",
+                    "LLM Structure Identification",
+                    "CSS Selector Extraction",
+                    "Data Table Preview",
+                    "CSV/JSON Export",
+                  ]}
+                />
+                <div
+                  style={{
+                    marginTop: "1rem",
+                    padding: "1rem",
+                    background: "var(--accent-glow)",
+                    borderLeft: "2px solid #00FF88",
+                    fontFamily: "var(--font-mono)",
+                    fontSize: "0.72rem",
+                    color: "#00FF88",
+                  }}
+                >
+                  Deployed on Railway with headless Chromium
+                </div>
               </div>
             </div>
           </div>
