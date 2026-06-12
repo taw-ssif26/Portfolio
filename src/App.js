@@ -1043,7 +1043,7 @@ export default function Portfolio() {
                   <a className="btn-sm outline" href="https://github.com/taw-ssif26/scraper-project" target="_blank" rel="noreferrer">
                     GitHub
                   </a>
-                  <a className="btn-sm outline" href="#">
+                  <a className="btn-sm outline" href="https://scraper-project-seven.vercel.app/" target="_blank" rel="noreferrer">
                     Live Demo
                   </a>
                 </div>
