@@ -680,7 +680,7 @@ export default function Portfolio() {
               letterSpacing: "-0.01em",
             }}
           >
-            Md. Abu Tawsif
+            <h1> Md. Abu Tawsif </h1>
           </div>
           <h1 className="hero-h1">
             I build <span>automation</span>
