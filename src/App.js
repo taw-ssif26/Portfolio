@@ -1199,13 +1199,13 @@ export default function Portfolio() {
             { label: "GitHub", href: "https://github.com/taw-ssif26" },
             {
               label: "LinkedIn",
-              href: "https://linkedin.com/in/md-abu-tawsif-50826a3b7",
+              href: "https://linkedin.com/in/md-abu-tawsif-50826a3b7"
             },
             { label: "Telegram", href: "https://t.me/Tawssif26" },
             { label: "Facebook", href: "https://facebook.com/mdabu.tawsif.3" },
             { label: "Instagram", href: "https://instagram.com/taw_ssif" },
             { label: "YouTube", href: "https://youtube.com/@Md.AbuTawsif" },
-{label: "Fiverr.", href:"https://fiverr.com/accounts/tawsif_mathology"
+{label: "Fiverr.", href:"https://fiverr.com/accounts/tawsif_mathology"}
           ].map((l) => (
             <a
               key={l.label}
