@@ -1,0 +1,1769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>AI FOUNDRY | Md Abu Tawsif</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --void:#050505;--abyss:#0a0a0f;--deep:#0d1117;--charcoal:#161b22;--graphite:#1c2128;
+  --gunmetal:#2d333b;--steel:#484f58;--silver:#8b949e;--frost:#c9d1d9;--white:#f0f6fc;
+  --accent-blue:#58a6ff;--accent-blue-dim:#1f6feb;--accent-amber:#d29922;--accent-amber-glow:#e3b341;
+  --accent-green:#3fb950;--accent-red:#f85149;--accent-cyan:#39c5cf;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{width:100%;overflow-x:hidden}body{width:100%;min-height:100vh;background:var(--void);font-family:'Space Mono','Courier New',monospace;color:var(--frost);cursor:none}
+#cursor-core{position:fixed;width:8px;height:8px;background:var(--accent-blue);border-radius:50%;pointer-events:none;z-index:10000;mix-blend-mode:screen;transition:transform 0.08s ease-out;box-shadow:0 0 20px var(--accent-blue),0 0 40px var(--accent-blue-dim)}
+#cursor-ring{position:fixed;width:40px;height:40px;border:1px solid rgba(88,166,255,0.3);border-radius:50%;pointer-events:none;z-index:9999;transition:transform 0.15s ease-out,width 0.2s,height 0.2s}
+#cursor-ring.hovering{width:60px;height:60px;border-color:var(--accent-amber);background:rgba(210,153,34,0.05)}
+#boot-sequence{position:fixed;inset:0;background:var(--void);z-index:99999;display:flex;flex-direction:column;justify-content:center;align-items:center;overflow:hidden}
+#boot-sequence::before{content:'';position:fixed;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--accent-blue),transparent);opacity:0;animation:scanlineTop 3s ease-in-out infinite}
+#boot-sequence::after{content:'';position:fixed;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--accent-blue),transparent);opacity:0;animation:scanlineBottom 3s ease-in-out infinite 1.5s}
+@keyframes scanlineTop{0%,100%{opacity:0;transform:translateX(-100%)}50%{opacity:0.5;transform:translateX(100%)}}
+@keyframes scanlineBottom{0%,100%{opacity:0;transform:translateX(100%)}50%{opacity:0.5;transform:translateX(-100%)}}
+#boot-canvas{position:fixed;inset:0;z-index:1}
+#boot-core{position:fixed;width:80px;height:80px;border-radius:50%;background:radial-gradient(circle at 30% 30%,var(--accent-blue),var(--accent-blue-dim),var(--deep));box-shadow:0 0 60px rgba(88,166,255,0.4),0 0 120px rgba(31,111,235,0.15),inset 0 0 30px rgba(255,255,255,0.1);animation:bootCorePulse 2s ease-in-out infinite;z-index:2}
+#boot-core::before{content:'';position:absolute;inset:-20px;border-radius:50%;border:1px solid rgba(88,166,255,0.15);animation:bootCoreRing 3s linear infinite}
+#boot-core::after{content:'';position:absolute;inset:-40px;border-radius:50%;border:1px solid rgba(88,166,255,0.08);animation:bootCoreRing 3s linear infinite reverse}
+@keyframes bootCorePulse{0%,100%{transform:scale(1);box-shadow:0 0 60px rgba(88,166,255,0.4),0 0 120px rgba(31,111,235,0.15)}50%{transform:scale(1.1);box-shadow:0 0 80px rgba(88,166,255,0.5),0 0 160px rgba(31,111,235,0.2)}}
+@keyframes bootCoreRing{0%{transform:rotate(0deg) scale(1);opacity:0.3}50%{transform:rotate(180deg) scale(1.15);opacity:0.1}100%{transform:rotate(360deg) scale(1);opacity:0.3}}
+#boot-ring-outer{position:fixed;width:200px;height:200px;border-radius:50%;border:1px solid rgba(88,166,255,0.1);z-index:2;animation:bootRingSpin 8s linear infinite}
+#boot-ring-outer::before{content:'';position:absolute;inset:20px;border-radius:50%;border:1px solid rgba(88,166,255,0.08);animation:bootRingSpin 6s linear infinite reverse}
+#boot-ring-inner{position:fixed;width:140px;height:140px;border-radius:50%;border:1px dashed rgba(88,166,255,0.12);z-index:2;animation:bootRingSpin 4s linear infinite reverse}
+@keyframes bootRingSpin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+#boot-hex-grid{position:fixed;inset:0;z-index:1;opacity:0.03;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%2358a6ff' fill-opacity='1'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-7.5L27.99 34H28v2.31h-.01L17 42.65V49h-2z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");animation:hexGridDrift 20s linear infinite}
+@keyframes hexGridDrift{0%{background-position:0 0}100%{background-position:28px 49px}}
+#boot-progress{position:fixed;bottom:60px;left:50%;transform:translateX(-50%);width:200px;height:2px;background:var(--charcoal);overflow:hidden;z-index:3}
+#boot-progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent-blue),var(--accent-cyan),var(--accent-blue));background-size:200% 100%;animation:progressShine 2s linear infinite;transition:width 0.5s cubic-bezier(0.16,1,0.3,1)}
+@keyframes progressShine{0%{background-position:200% 0}100%{background-position:-200% 0}}
+#boot-status{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);font-size:9px;color:var(--gunmetal);letter-spacing:4px;text-transform:uppercase;z-index:3;text-align:center}
+#boot-status::after{content:'';display:inline-block;width:6px;height:6px;background:var(--accent-blue);border-radius:50%;margin-left:10px;animation:statusPulse 1s ease-in-out infinite;box-shadow:0 0 10px var(--accent-blue)}
+@keyframes statusPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.3;transform:scale(0.6)}}
+#boot-percent{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);font-family:'Syne','Inter',sans-serif;font-size:32px;font-weight:700;color:var(--accent-blue);opacity:0.8;z-index:3;letter-spacing:2px}
+#boot-logo{position:fixed;top:40px;left:50%;transform:translateX(-50%);font-family:'Syne','Inter',sans-serif;font-size:11px;letter-spacing:6px;color:var(--gunmetal);text-transform:uppercase;opacity:0;animation:logoFade 1s ease forwards 0.5s;z-index:3}
+#boot-logo span{color:var(--accent-blue)}
+@keyframes logoFade{0%{opacity:0;transform:translateX(-50%) translateY(-10px)}100%{opacity:1;transform:translateX(-50%) translateY(0)}}
+#particle-canvas{position:fixed;inset:0;z-index:0}
+.vignette{position:fixed;inset:0;pointer-events:none;z-index:5;background:radial-gradient(ellipse at center,transparent 50%,rgba(0,0,0,0.35) 100%)}
+.scanlines{position:fixed;inset:0;pointer-events:none;z-index:5;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.015) 2px,rgba(0,0,0,0.015) 4px)}
+
+#neural-canvas{position:fixed;inset:0;z-index:0}
+#constellation-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.6}
+#aurora-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.3}
+#matrix-rain{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0;transition:opacity 2s ease}
+#matrix-rain.active{opacity:0.08}
+#wave-interference{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0;transition:opacity 2s ease}
+#wave-interference.active{opacity:0.15}
+#data-stream{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0;transition:opacity 2s ease}
+#data-stream.active{opacity:0.1}
+#fractal-bg{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0;transition:opacity 3s ease}
+#fractal-bg.active{opacity:0.12}
+#transition-overlay{position:fixed;inset:0;background:var(--void);z-index:50;pointer-events:none;opacity:0;transition:opacity 0.6s ease}
+#transition-overlay.active{opacity:1}
+#matrix-rain{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0;transition:opacity 2s ease}
+#matrix-rain.active{opacity:0.08}
+#wave-interference{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0;transition:opacity 2s ease}
+#wave-interference.active{opacity:0.15}
+#data-stream{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0;transition:opacity 2s ease}
+#data-stream.active{opacity:0.1}
+#fractal-bg{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0;transition:opacity 3s ease}
+#fractal-bg.active{opacity:0.12}
+#hud{position:fixed;inset:0;pointer-events:none;z-index:100;padding:24px 32px;display:flex;flex-direction:column;justify-content:space-between}
+.hud-top{display:flex;justify-content:space-between;align-items:flex-start}
+.hud-brand{font-family:'Syne','Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:4px;color:var(--steel);text-transform:uppercase}
+.hud-brand span{color:var(--accent-blue)}
+.hud-coords{font-size:10px;color:var(--gunmetal);letter-spacing:1px;text-align:right}
+.hud-bottom{display:flex;justify-content:space-between;align-items:flex-end}
+.hud-nav-hint{font-size:10px;color:var(--gunmetal);letter-spacing:2px}
+.hud-system{display:flex;gap:24px;font-size:10px;color:var(--gunmetal)}
+.hud-system-item{display:flex;align-items:center;gap:6px}
+.hud-pulse{width:6px;height:6px;border-radius:50%;background:var(--accent-green);animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.8)}}
+.live-dashboard{position:fixed;top:80px;right:32px;width:200px;border:1px solid var(--charcoal);background:rgba(5,5,5,0.8);padding:16px;z-index:90;opacity:0;transition:opacity 0.5s ease;cursor:move;user-select:none}
+.live-dashboard.visible{opacity:1}
+.live-dashboard.dragging{opacity:0.9;box-shadow:0 10px 40px rgba(0,0,0,0.5);border-color:var(--accent-blue);transition:none}
+.dashboard-close{position:absolute;top:-10px;right:-10px;width:20px;height:20px;border-radius:50%;background:var(--charcoal);border:1px solid var(--gunmetal);color:var(--silver);font-size:10px;display:flex;justify-content:center;align-items:center;cursor:none;opacity:0;transition:all 0.3s ease}
+.live-dashboard:hover .dashboard-close{opacity:1}
+.dashboard-close:hover{background:var(--accent-red);border-color:var(--accent-red);color:var(--white)}
+.dashboard-title{font-size:9px;color:var(--gunmetal);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;border-bottom:1px solid var(--charcoal);padding-bottom:8px}
+.dashboard-metric{display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:10px}
+.dashboard-metric-label{color:var(--gunmetal)}.dashboard-metric-value{color:var(--accent-green);font-family:'Syne','Inter',sans-serif}
+.dashboard-bar{width:100%;height:2px;background:var(--charcoal);margin-top:4px;margin-bottom:8px;overflow:hidden}
+.dashboard-bar-fill{height:100%;background:var(--accent-green);transition:width 0.5s ease}
+#egg-notification{position:fixed;top:80px;right:32px;padding:16px 24px;border:1px solid var(--accent-amber);background:rgba(13,17,23,0.95);z-index:500;transform:translateX(400px);transition:transform 0.5s cubic-bezier(0.16,1,0.3,1)}
+#egg-notification.show{transform:translateX(0)}
+.egg-title{font-size:11px;color:var(--accent-amber);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px}
+.egg-text{font-size:12px;color:var(--silver)}
+.konami-indicator{position:fixed;bottom:100px;right:32px;font-size:20px;color:var(--accent-amber);opacity:0;transition:opacity 0.3s ease;z-index:300}
+.konami-indicator.active{opacity:1}
+#nav-dock{position:fixed;bottom:40px;left:50%;transform:translateX(-50%);z-index:200;display:flex;gap:4px;padding:8px 16px;border:1px solid var(--charcoal);background:rgba(5,5,5,0.8);backdrop-filter:blur(20px);max-width:90vw;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;-ms-overflow-style:none;cursor:grab;user-select:none;scroll-behavior:smooth}
+#nav-dock::-webkit-scrollbar{display:none}
+#nav-dock:active{cursor:grabbing}
+#nav-dock.dragging{scroll-behavior:auto}
+.nav-item{padding:10px 20px;font-size:10px;color:var(--gunmetal);letter-spacing:2px;text-transform:uppercase;cursor:none;border:1px solid transparent;transition:all 0.3s ease;position:relative}
+.nav-item:hover{color:var(--silver);border-color:var(--charcoal)}
+.nav-item.active{color:var(--accent-blue);border-color:var(--accent-blue);background:rgba(88,166,255,0.05)}
+.nav-item::after{content:attr(data-room);position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);font-size:9px;color:var(--accent-amber);white-space:nowrap;opacity:0;transition:opacity 0.3s ease;pointer-events:none}
+.nav-item:hover::after{opacity:1}
+#rooms-container{position:fixed;inset:0;transform-style:preserve-3d;transition:transform 1.2s cubic-bezier(0.16,1,0.3,1);z-index:10}
+.room{position:fixed;inset:0;display:flex;flex-direction:column;justify-content:flex-start;align-items:center;opacity:0;pointer-events:none;transition:opacity 0.8s ease,transform 0.8s ease;transform:translateZ(-500px) rotateY(15deg);overflow-y:auto;overflow-x:hidden;padding-top:60px;padding-bottom:100px}
+.room.active{opacity:1;pointer-events:auto;transform:translateZ(0) rotateY(0);z-index:10}
+#room-entrance{background:radial-gradient(ellipse at 30% 50%,rgba(31,111,235,0.03) 0%,transparent 60%)}
+.entrance-gate{position:relative;width:600px;min-height:400px;border:1px solid var(--charcoal);background:rgba(13,17,23,0.6);backdrop-filter:blur(20px);display:flex;flex-direction:column;justify-content:center;align-items:center;gap:40px;margin:auto}
+.gate-corner{position:absolute;width:20px;height:20px;border:1px solid var(--accent-blue);opacity:0.5}
+.gate-corner.tl{top:-1px;left:-1px;border-right:none;border-bottom:none}
+.gate-corner.tr{top:-1px;right:-1px;border-left:none;border-bottom:none}
+.gate-corner.bl{bottom:-1px;left:-1px;border-right:none;border-top:none}
+.gate-corner.br{bottom:-1px;right:-1px;border-left:none;border-top:none}
+.gate-title{font-family:'Syne','Inter',sans-serif;font-size:42px;font-weight:700;letter-spacing:8px;color:var(--white);text-transform:uppercase}
+.gate-title .accent{color:var(--accent-blue)}
+.gate-subtitle{font-size:12px;color:var(--silver);letter-spacing:6px;text-transform:uppercase}
+.gate-divider{width:60px;height:1px;background:linear-gradient(90deg,transparent,var(--accent-blue),transparent)}
+.gate-enter-btn{padding:16px 48px;border:1px solid var(--accent-blue);background:transparent;color:var(--accent-blue);font-family:'Space Mono','Courier New',monospace;font-size:11px;letter-spacing:4px;text-transform:uppercase;cursor:none;position:relative;overflow:hidden;transition:all 0.4s ease}
+.gate-enter-btn::before{content:'';position:absolute;inset:0;background:var(--accent-blue);transform:translateX(-101%);transition:transform 0.4s ease;z-index:-1}
+.gate-enter-btn:hover{color:var(--void);box-shadow:0 0 30px rgba(88,166,255,0.2)}
+.gate-enter-btn:hover::before{transform:translateX(0)}
+.scroll-hint{position:absolute;bottom:100px;font-size:10px;color:var(--gunmetal);letter-spacing:3px;animation:float 3s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+#room-core{background:radial-gradient(ellipse at center,rgba(31,111,235,0.04) 0%,transparent 60%)}
+.core-orb-container{position:relative;width:300px;height:300px;display:flex;justify-content:center;align-items:center;margin:auto}
+.core-orb{width:120px;height:120px;border-radius:50%;background:radial-gradient(circle at 30% 30%,var(--accent-blue),var(--accent-blue-dim),var(--deep));box-shadow:0 0 60px rgba(88,166,255,0.3),0 0 120px rgba(31,111,235,0.1),inset 0 0 40px rgba(255,255,255,0.1);animation:orbPulse 4s ease-in-out infinite;position:relative}
+.core-orb::after{content:'';position:absolute;inset:-30px;border-radius:50%;border:1px solid rgba(88,166,255,0.1);animation:orbRing 6s linear infinite}
+@keyframes orbPulse{0%,100%{transform:scale(1);box-shadow:0 0 60px rgba(88,166,255,0.3),0 0 120px rgba(31,111,235,0.1)}50%{transform:scale(1.05);box-shadow:0 0 80px rgba(88,166,255,0.4),0 0 160px rgba(31,111,235,0.15)}}
+@keyframes orbRing{0%{transform:rotate(0deg) scale(1);opacity:0.3}50%{transform:rotate(180deg) scale(1.1);opacity:0.1}100%{transform:rotate(360deg) scale(1);opacity:0.3}}
+.core-info{position:absolute;bottom:-80px;text-align:center}
+.core-name{font-family:'Syne','Inter',sans-serif;font-size:28px;font-weight:600;color:var(--white);letter-spacing:4px}
+.core-role{font-size:11px;color:var(--silver);letter-spacing:3px;margin-top:8px;text-transform:uppercase}
+.core-stats{position:absolute;display:flex;gap:48px;margin-top:40px}
+.core-stat{text-align:center}
+.core-stat-value{font-size:24px;font-weight:600;color:var(--accent-blue);font-family:'Syne','Inter',sans-serif}
+.core-stat-label{font-size:9px;color:var(--gunmetal);letter-spacing:2px;text-transform:uppercase;margin-top:4px}
+#room-projects{background:radial-gradient(ellipse at 70% 30%,rgba(210,153,34,0.03) 0%,transparent 60%)}
+/* ===== PROJECTS LAB - REDESIGNED ===== */
+#room-projects{background:radial-gradient(ellipse at 70% 30%,rgba(210,153,34,0.03) 0%,transparent 60%)}
+.projects-header{position:absolute;top:50px;text-align:center;z-index:10}
+.projects-header-title{font-family:'Syne','Inter',sans-serif;font-size:13px;color:var(--gunmetal);letter-spacing:4px;text-transform:uppercase}
+.projects-header-sub{font-size:10px;color:var(--steel);margin-top:6px;letter-spacing:2px}
+
+.projects-lab-container{max-width:1200px;width:100%;padding:0 30px;margin:80px auto 0;display:flex;flex-direction:column;gap:20px}
+
+.project-lab-card{position:relative;border:1px solid var(--charcoal);background:linear-gradient(135deg,rgba(13,17,23,0.9),rgba(5,5,5,0.95));overflow:hidden;cursor:none;transition:all 0.6s cubic-bezier(0.16,1,0.3,1);display:grid;grid-template-columns:280px 1fr;min-height:200px}
+.project-lab-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent-amber),var(--accent-blue),transparent);opacity:0;transition:opacity 0.5s ease}
+.project-lab-card:hover{border-color:var(--gunmetal);transform:translateY(-6px);box-shadow:0 25px 80px rgba(0,0,0,0.5),0 0 40px rgba(210,153,34,0.08)}
+.project-lab-card:hover::before{opacity:1}
+
+.project-lab-visual{position:relative;background:var(--abyss);display:flex;flex-direction:column;justify-content:center;align-items:center;padding:24px;border-right:1px solid var(--charcoal);overflow:hidden}
+.project-lab-visual::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,rgba(210,153,34,0.08),transparent 70%);opacity:0;transition:opacity 0.5s ease}
+.project-lab-card:hover .project-lab-visual::before{opacity:1}
+
+.project-lab-icon{width:64px;height:64px;border:1px solid var(--charcoal);border-radius:12px;display:flex;justify-content:center;align-items:center;font-size:28px;background:rgba(13,17,23,0.8);position:relative;z-index:1;transition:all 0.4s ease}
+.project-lab-card:hover .project-lab-icon{border-color:var(--accent-amber);box-shadow:0 0 30px rgba(210,153,34,0.15);transform:scale(1.1)}
+
+.project-lab-status{position:absolute;top:12px;left:12px;display:flex;align-items:center;gap:6px;font-size:8px;color:var(--accent-green);letter-spacing:1px;text-transform:uppercase}
+.project-lab-status-dot{width:6px;height:6px;border-radius:50%;background:var(--accent-green);box-shadow:0 0 8px var(--accent-green);animation:pulse 2s infinite}
+.project-lab-id{position:absolute;bottom:12px;left:12px;font-size:9px;color:var(--gunmetal);letter-spacing:2px}
+
+.project-lab-content{padding:28px 32px;display:flex;flex-direction:column;justify-content:center;position:relative}
+.project-lab-title{font-family:'Syne','Inter',sans-serif;font-size:20px;font-weight:600;color:var(--frost);margin-bottom:10px;transition:color 0.3s ease}
+.project-lab-card:hover .project-lab-title{color:var(--accent-amber)}
+.project-lab-desc{font-size:12px;color:var(--silver);line-height:1.7;margin-bottom:16px}
+.project-lab-metrics{display:flex;gap:24px;margin-bottom:16px}
+.project-lab-metric{display:flex;align-items:center;gap:6px;font-size:10px;color:var(--gunmetal)}
+.project-lab-metric-value{color:var(--accent-blue);font-family:'Syne','Inter',sans-serif;font-weight:600}
+.project-lab-tech{display:flex;gap:6px;flex-wrap:wrap}
+.project-tech-tag{font-size:9px;color:var(--accent-amber);padding:3px 10px;border:1px solid rgba(210,153,34,0.2);letter-spacing:1px;border-radius:3px;transition:all 0.3s ease}
+.project-tech-tag:hover{background:rgba(210,153,34,0.1);border-color:var(--accent-amber)}
+
+.project-lab-actions{position:absolute;top:16px;right:16px;display:flex;gap:8px;opacity:0;transform:translateY(-10px);transition:all 0.4s ease}
+.project-lab-card:hover .project-lab-actions{opacity:1;transform:translateY(0)}
+.project-lab-btn{padding:6px 14px;border:1px solid var(--charcoal);background:transparent;color:var(--silver);font-family:inherit;font-size:9px;letter-spacing:1px;text-transform:uppercase;cursor:none;transition:all 0.3s ease;border-radius:3px}
+.project-lab-btn:hover{border-color:var(--accent-blue);color:var(--accent-blue);box-shadow:0 0 15px rgba(88,166,255,0.1)}
+.project-lab-btn.primary{border-color:var(--accent-amber);color:var(--accent-amber)}
+.project-lab-btn.primary:hover{background:rgba(210,153,34,0.1);box-shadow:0 0 15px rgba(210,153,34,0.1)}
+
+.project-lab-terminal{position:absolute;bottom:0;left:0;right:0;height:0;background:rgba(5,5,5,0.95);border-top:1px solid var(--charcoal);overflow:hidden;transition:height 0.5s cubic-bezier(0.16,1,0.3,1);font-size:10px;color:var(--gunmetal);padding:0 32px;display:flex;align-items:center}
+.project-lab-card.expanded .project-lab-terminal{height:50px}
+.project-lab-card.expanded{grid-template-columns:280px 1fr;min-height:250px}
+#room-factory{background:radial-gradient(ellipse at 30% 70%,rgba(57,197,207,0.03) 0%,transparent 60%)}
+.skills-network{position:relative;width:900px;height:600px;margin:auto}
+.skill-node{position:absolute;padding:12px 20px;border:1px solid var(--charcoal);background:rgba(13,17,23,0.8);font-size:11px;letter-spacing:1px;color:var(--silver);cursor:none;transition:all 0.4s ease;white-space:nowrap}
+.skill-node:hover{border-color:var(--accent-blue);color:var(--white);box-shadow:0 0 20px rgba(88,166,255,0.1);z-index:10}
+.skill-node.core{border-color:var(--accent-blue);color:var(--accent-blue);font-weight:600;font-size:13px}
+.skill-connector{position:absolute;height:1px;background:linear-gradient(90deg,var(--charcoal),var(--gunmetal),var(--charcoal));transform-origin:left center;opacity:0.3}
+.skill-connector.active{background:linear-gradient(90deg,var(--accent-blue),var(--accent-cyan));opacity:0.6}
+.skill-node-tooltip{position:absolute;bottom:calc(100% + 12px);left:50%;transform:translateX(-50%);padding:8px 14px;background:var(--charcoal);border:1px solid var(--gunmetal);font-size:10px;color:var(--frost);white-space:nowrap;opacity:0;pointer-events:none;transition:opacity 0.3s ease}
+.skill-node:hover .skill-node-tooltip{opacity:1}
+#room-research{background:radial-gradient(ellipse at 50% 50%,rgba(88,166,255,0.02) 0%,transparent 60%)}
+.workspace-container{display:flex;gap:60px;align-items:center;max-width:1200px;padding:0 40px;margin:auto}
+.workspace-desk{position:relative;width:500px;height:350px;border:1px solid var(--charcoal);background:rgba(13,17,23,0.6);overflow:visible}
+.desk-item{position:absolute;border:1px solid var(--charcoal);background:rgba(22,27,34,0.9);cursor:none;transition:all 0.4s ease;display:flex;flex-direction:column;justify-content:center;align-items:center;font-size:9px;color:var(--gunmetal);text-align:center;padding:4px}
+.desk-item:hover{border-color:var(--accent-blue);box-shadow:0 0 20px rgba(88,166,255,0.1);z-index:5;color:var(--silver)}
+.desk-item .item-label{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);padding:4px 10px;background:var(--charcoal);border:1px solid var(--gunmetal);color:var(--frost);font-size:10px;white-space:nowrap;opacity:0;transition:opacity 0.3s ease;pointer-events:none}
+.desk-item:hover .item-label{opacity:1}
+.placeholder-img{background:var(--graphite);display:flex;justify-content:center;align-items:center;font-size:8px;color:var(--steel);width:100%;height:100%}
+.item-monitor{width:180px;height:110px;top:30px;left:160px}
+.item-laptop{width:100px;height:70px;top:50px;left:30px}
+.item-keyboard{width:140px;height:30px;bottom:80px;left:180px}
+.item-mug{width:30px;height:35px;bottom:90px;right:80px}
+.item-notebook{width:60px;height:45px;bottom:70px;left:40px}
+.item-plant{width:35px;height:50px;top:20px;right:30px}
+.item-photo{width:40px;height:50px;bottom:70px;right:30px}
+.workspace-info{max-width:400px}
+.workspace-info h2{font-family:'Syne','Inter',sans-serif;font-size:32px;font-weight:700;color:var(--white);margin-bottom:8px;letter-spacing:2px}
+.workspace-info .role{font-size:12px;color:var(--accent-blue);letter-spacing:3px;text-transform:uppercase;margin-bottom:24px}
+.workspace-info p{font-size:13px;color:var(--silver);line-height:1.8;margin-bottom:16px}
+.workspace-info .highlight{color:var(--accent-amber)}
+.workspace-portrait{width:120px;height:150px;border:1px solid var(--charcoal);margin-bottom:24px;overflow:hidden}
+#room-terminal{background:radial-gradient(ellipse at center,rgba(0,0,0,0.8) 0%,var(--void) 100%)}
+.terminal-window{width:900px;min-height:550px;border:1px solid var(--charcoal);background:rgba(5,5,5,0.95);display:flex;flex-direction:column;margin:auto}
+.terminal-header{padding:12px 20px;border-bottom:1px solid var(--charcoal);display:flex;justify-content:space-between;align-items:center}
+.terminal-title{font-size:11px;color:var(--silver);letter-spacing:2px}
+.terminal-controls{display:flex;gap:8px}
+.term-btn{width:10px;height:10px;border-radius:50%;border:1px solid var(--gunmetal)}
+.term-btn.red{border-color:var(--accent-red)}.term-btn.yellow{border-color:var(--accent-amber)}.term-btn.green{border-color:var(--accent-green)}
+.terminal-body{flex:1;padding:20px;overflow-y:auto;font-size:13px;line-height:1.8;min-height:300px}
+.terminal-body::-webkit-scrollbar{width:4px}.terminal-body::-webkit-scrollbar-thumb{background:var(--gunmetal)}
+.terminal-line{margin-bottom:2px;white-space:pre-wrap;word-break:break-word}
+.terminal-line.prompt{color:var(--accent-green)}.terminal-line.output{color:var(--silver)}.terminal-line.error{color:var(--accent-red)}.terminal-line.warn{color:var(--accent-amber)}.terminal-line.info{color:var(--accent-cyan)}
+.terminal-input-line{display:flex;align-items:center;gap:8px}
+.terminal-input{background:transparent;border:none;color:var(--frost);font-family:inherit;font-size:13px;outline:none;flex:1;caret-color:var(--accent-blue);cursor:text}
+.terminal-cursor{display:inline-block;width:8px;height:16px;background:var(--accent-blue);animation:blink 1s step-end infinite;vertical-align:middle}
+@keyframes blink{50%{opacity:0}}
+.terminal-hint{padding:8px 20px;border-top:1px solid var(--charcoal);font-size:10px;color:var(--gunmetal)}
+#room-contact{background:radial-gradient(ellipse at 50% 30%,rgba(88,166,255,0.03) 0%,transparent 60%)}
+.contact-center{display:flex;gap:60px;align-items:center;max-width:1100px;padding:0 40px;margin:auto}
+.contact-console{width:500px;border:1px solid var(--charcoal);background:rgba(13,17,23,0.7);padding:40px}
+.contact-console h3{font-family:'Syne','Inter',sans-serif;font-size:18px;font-weight:600;color:var(--white);margin-bottom:24px;letter-spacing:2px}
+.contact-field{margin-bottom:20px}
+.contact-field label{display:block;font-size:10px;color:var(--gunmetal);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
+.contact-field input,.contact-field textarea{width:100%;padding:12px 16px;border:1px solid var(--charcoal);background:rgba(5,5,5,0.5);color:var(--frost);font-family:inherit;font-size:13px;outline:none;transition:border-color 0.3s ease;cursor:text}
+.contact-field input:focus,.contact-field textarea:focus{border-color:var(--accent-blue)}
+.contact-field textarea{min-height:100px;resize:vertical}
+.contact-submit{width:100%;padding:14px;border:1px solid var(--accent-blue);background:transparent;color:var(--accent-blue);font-family:inherit;font-size:11px;letter-spacing:3px;text-transform:uppercase;cursor:none;transition:all 0.4s ease;position:relative;overflow:hidden}
+.contact-submit::before{content:'';position:absolute;inset:0;background:var(--accent-blue);transform:translateX(-101%);transition:transform 0.4s ease;z-index:-1}
+.contact-submit:hover{color:var(--void)}.contact-submit:hover::before{transform:translateX(0)}
+.contact-info-panel{max-width:350px}
+.contact-info-panel h3{font-family:'Syne','Inter',sans-serif;font-size:24px;font-weight:700;color:var(--white);margin-bottom:8px}
+.contact-info-panel .subtitle{font-size:11px;color:var(--accent-amber);letter-spacing:3px;text-transform:uppercase;margin-bottom:32px}
+.contact-link{display:flex;align-items:center;gap:16px;padding:16px 0;border-bottom:1px solid var(--charcoal);font-size:13px;color:var(--silver);text-decoration:none;transition:all 0.3s ease;cursor:none}
+.contact-link:hover{color:var(--accent-blue);padding-left:8px}
+.contact-link-icon{width:36px;height:36px;border:1px solid var(--charcoal);display:flex;justify-content:center;align-items:center;font-size:14px;transition:border-color 0.3s ease}
+.contact-link:hover .contact-link-icon{border-color:var(--accent-blue)}
+#room-vault{background:radial-gradient(ellipse at center,rgba(210,153,34,0.04) 0%,transparent 60%)}
+.vault-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;max-width:1000px;margin:auto}
+.vault-item{width:200px;height:140px;border:1px solid var(--charcoal);background:rgba(13,17,23,0.6);display:flex;flex-direction:column;justify-content:center;align-items:center;gap:12px;cursor:none;transition:all 0.4s ease;position:relative;overflow:hidden}
+.vault-item::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--accent-amber),transparent);opacity:0;transition:opacity 0.4s ease}
+.vault-item:hover{border-color:var(--accent-amber);transform:translateY(-4px)}.vault-item:hover::before{opacity:1}
+.vault-icon{font-size:28px;color:var(--accent-amber);opacity:0.6}
+.vault-label{font-size:10px;color:var(--silver);letter-spacing:2px;text-transform:uppercase}
+.vault-value{font-family:'Syne','Inter',sans-serif;font-size:20px;font-weight:600;color:var(--white)}
+#room-secret{background:var(--void)}
+.secret-content{text-align:center;max-width:600px;padding:0 40px;margin:auto}
+.secret-content h2{font-family:'Syne','Inter',sans-serif;font-size:48px;font-weight:700;color:var(--accent-amber);margin-bottom:16px;letter-spacing:4px}
+.secret-content p{font-size:14px;color:var(--silver);line-height:1.8;margin-bottom:32px}
+.secret-logs{text-align:left;border:1px solid var(--charcoal);background:rgba(5,5,5,0.8);padding:24px;font-size:12px;line-height:2;color:var(--gunmetal)}
+.secret-logs .log-time{color:var(--accent-green)}.secret-logs .log-system{color:var(--accent-cyan)}.secret-logs .log-msg{color:var(--silver)}
+
+.room::-webkit-scrollbar{width:6px}
+.room::-webkit-scrollbar-track{background:transparent}
+.room::-webkit-scrollbar-thumb{background:var(--gunmetal);border-radius:3px}
+.room::-webkit-scrollbar-thumb:hover{background:var(--steel)}
+@media(max-width:1200px){
+  .projects-lab-container{padding:0 20px}
+  .project-lab-card{grid-template-columns:220px 1fr}
+  .skills-network{width:700px;height:500px}
+  .workspace-container{flex-direction:column}
+  .contact-center{flex-direction:column}
+  .vault-grid{grid-template-columns:repeat(2,1fr)}
+  .terminal-window{width:95vw}
+}
+@media(max-width:768px){
+  body{cursor:auto}
+  #cursor-core, #cursor-ring{display:none}
+  .hud-brand{font-size:9px;letter-spacing:2px}
+  .hud-coords{display:none}
+  .hud-nav-hint{display:none}
+  .hud-system{gap:10px}
+  .live-dashboard{top:60px;right:10px;width:160px;padding:10px}
+  .dashboard-title{font-size:8px}
+  .dashboard-metric{font-size:8px;padding:3px 0}
+  #nav-dock{bottom:12px;padding:5px 8px;gap:2px}
+  .nav-item{padding:6px 10px;font-size:8px;letter-spacing:1px}
+  .entrance-gate{width:92vw;min-height:300px;padding:24px;gap:20px}
+  .gate-title{font-size:22px;letter-spacing:4px}
+  .gate-subtitle{font-size:9px;letter-spacing:3px}
+  .gate-enter-btn{padding:12px 28px;font-size:9px}
+  .core-orb-container{width:200px;height:200px}
+  .core-orb{width:80px;height:80px}
+  .core-name{font-size:18px;letter-spacing:2px}
+  .core-role{font-size:9px}
+  .core-stats{gap:24px;margin-top:24px}
+  .core-stat-value{font-size:16px}
+  .core-stat-label{font-size:8px}
+  .projects-lab-container{margin-top:60px;padding:0 14px;gap:14px}
+  .project-lab-card{grid-template-columns:1fr;min-height:auto}
+  .project-lab-visual{padding:16px;border-right:none;border-bottom:1px solid var(--charcoal);min-height:120px}
+  .project-lab-icon{width:48px;height:48px;font-size:22px}
+  .project-lab-content{padding:18px 20px}
+  .project-lab-title{font-size:16px}
+  .project-lab-desc{font-size:11px}
+  .project-lab-metrics{gap:16px;margin-bottom:12px}
+  .project-lab-metric{font-size:9px}
+  .project-lab-actions{position:relative;top:auto;right:auto;opacity:1;transform:none;margin-top:12px;display:flex;gap:8px}
+  .project-lab-btn{padding:8px 16px;font-size:10px}
+  .project-lab-card.expanded{grid-template-columns:1fr}
+  .project-lab-card.expanded .project-lab-terminal{height:auto;padding:12px 20px}
+  .skills-network{width:100%;height:400px;padding:0 16px}
+  .skill-node{padding:8px 12px;font-size:9px}
+  .skill-node.core{font-size:11px}
+  .workspace-desk{width:90vw;height:260px}
+  .item-monitor{width:130px;height:80px;top:20px;left:110px}
+  .item-laptop{width:70px;height:50px;top:35px;left:20px}
+  .item-keyboard{width:100px;height:22px;bottom:60px;left:125px}
+  .item-mug{width:22px;height:28px;bottom:65px;right:55px}
+  .item-notebook{width:45px;height:35px;bottom:50px;left:25px}
+  .item-plant{width:25px;height:38px;top:15px;right:20px}
+  .item-photo{width:30px;height:38px;bottom:50px;right:20px}
+  .workspace-info h2{font-size:22px}
+  .workspace-info .role{font-size:10px}
+  .workspace-info p{font-size:11px}
+  .workspace-portrait{width:90px;height:110px}
+  .terminal-window{width:95vw;min-height:70vh}
+  .terminal-body{font-size:11px;padding:14px}
+  .terminal-input{font-size:11px}
+  .terminal-hint{font-size:9px}
+  .contact-center{gap:30px;padding:0 16px}
+  .contact-console{width:92vw;padding:24px}
+  .contact-console h3{font-size:14px}
+  .contact-field input,.contact-field textarea{padding:10px 12px;font-size:12px}
+  .contact-submit{padding:12px;font-size:10px}
+  .contact-info-panel h3{font-size:18px}
+  .contact-info-panel .subtitle{font-size:10px}
+  .contact-link{padding:12px 0;font-size:11px;gap:12px}
+  .contact-link-icon{width:30px;height:30px;font-size:12px}
+  .vault-grid{grid-template-columns:repeat(2,1fr);gap:12px;max-width:92vw}
+  .vault-item{width:auto;height:110px;gap:8px}
+  .vault-icon{font-size:22px}
+  .vault-label{font-size:9px}
+  .vault-value{font-size:16px}
+  .secret-content h2{font-size:28px}
+  .secret-content p{font-size:12px}
+  .secret-logs{padding:16px;font-size:10px}
+  .projects-header{top:40px}
+  .projects-header-title{font-size:11px}
+  .projects-header-sub{font-size:9px}
+}
+
+@media(max-width:480px){
+  .gate-title{font-size:18px}
+  .project-lab-title{font-size:14px}
+  .project-lab-desc{font-size:10px}
+  .vault-grid{grid-template-columns:1fr 1fr}
+  .nav-item{padding:5px 8px;font-size:7px}
+}
+
+@media(hover:none){
+  .project-lab-actions{opacity:1;transform:none;position:relative;top:auto;right:auto;margin-top:12px}
+  .dashboard-close{opacity:1}
+  .project-lab-card:hover{transform:none}
+  .project-lab-card:hover .project-lab-actions{opacity:1;transform:none}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms!important;transition-duration:0.01ms!important}}
+</style>
+<base target="_blank">
+<base target="_blank">
+</head>
+<body>
+<div id="cursor-core"></div>
+<div id="cursor-ring"></div>
+
+<div id="boot-sequence">
+<div id="boot-logo">AI <span>FOUNDRY</span></div>
+<canvas id="boot-canvas"></canvas>
+<div id="boot-core"></div>
+<div id="boot-ring-outer"></div>
+<div id="boot-ring-inner"></div>
+<div id="boot-hex-grid"></div>
+<div id="boot-status">SYSTEM INITIALIZATION</div>
+<div id="boot-progress"><div id="boot-progress-fill"></div></div>
+<div id="boot-percent">0%</div>
+</div>
+
+<canvas id="neural-canvas"></canvas>
+<canvas id="constellation-canvas"></canvas>
+<canvas id="aurora-canvas"></canvas>
+<canvas id="matrix-rain"></canvas>
+<canvas id="wave-interference"></canvas>
+<canvas id="data-stream"></canvas>
+<canvas id="fractal-bg"></canvas>
+<div class="vignette"></div>
+<div class="scanlines"></div>
+<div id="transition-overlay"></div>
+
+<div id="hud">
+<div class="hud-top">
+<div class="hud-brand">AI <span>FOUNDRY</span></div>
+<div class="hud-coords" id="hud-coords">X: 0000 | Y: 0000 | Z: 0000</div>
+</div>
+<div class="hud-bottom">
+<div class="hud-nav-hint">[WASD / ARROWS] NAVIGATE | [CLICK] INTERACT | [ESC] MENU</div>
+<div class="hud-system">
+<div class="hud-system-item"><div class="hud-pulse"></div> SYSTEM ONLINE</div>
+<div class="hud-system-item" id="hud-fps">60 FPS</div>
+<div class="hud-system-item" id="hud-time">00:00:00</div>
+</div>
+</div>
+</div>
+
+<div class="live-dashboard" id="live-dashboard">
+<div class="dashboard-close" onclick="document.getElementById('live-dashboard').style.display='none'">&#10005;</div>
+<div class="dashboard-title">Live Systems</div>
+<div class="dashboard-metric"><span class="dashboard-metric-label">CPU</span><span class="dashboard-metric-value" id="dash-cpu">12%</span></div>
+<div class="dashboard-bar"><div class="dashboard-bar-fill" id="dash-cpu-bar" style="width:12%"></div></div>
+<div class="dashboard-metric"><span class="dashboard-metric-label">MEMORY</span><span class="dashboard-metric-value" id="dash-mem">4.2 GB</span></div>
+<div class="dashboard-bar"><div class="dashboard-bar-fill" id="dash-mem-bar" style="width:35%"></div></div>
+<div class="dashboard-metric"><span class="dashboard-metric-label">NETWORK</span><span class="dashboard-metric-value" id="dash-net">2.4 MB/s</span></div>
+<div class="dashboard-bar"><div class="dashboard-bar-fill" id="dash-net-bar" style="width:24%"></div></div>
+<div class="dashboard-metric"><span class="dashboard-metric-label">AGENTS</span><span class="dashboard-metric-value" id="dash-agents">7 ACTIVE</span></div>
+<div class="dashboard-metric"><span class="dashboard-metric-label">UPTIME</span><span class="dashboard-metric-value" id="dash-uptime">00:00:00</span></div>
+</div>
+
+<div id="egg-notification">
+<div class="egg-title">Achievement Unlocked</div>
+<div class="egg-text" id="egg-text">Secret discovered!</div>
+</div>
+
+<div class="konami-indicator" id="konami-indicator">&#8593; &#8593; &#8595; &#8595; &#8592; &#8594; &#8592; &#8594; B A</div>
+
+<div id="nav-dock">
+<div class="nav-item active" data-room="entrance" onclick="goToRoom('entrance')">Gate</div>
+<div class="nav-item" data-room="core" onclick="goToRoom('core')">Core</div>
+<div class="nav-item" data-room="projects" onclick="goToRoom('projects')">Lab</div>
+<div class="nav-item" data-room="factory" onclick="goToRoom('factory')">Network</div>
+<div class="nav-item" data-room="research" onclick="goToRoom('research')">Workspace</div>
+<div class="nav-item" data-room="terminal" onclick="goToRoom('terminal')">Terminal</div>
+<div class="nav-item" data-room="vault" onclick="goToRoom('vault')">Vault</div>
+<div class="nav-item" data-room="contact" onclick="goToRoom('contact')">Command</div>
+</div>
+
+<div id="rooms-container">
+
+<div class="room active" id="room-entrance">
+<div class="entrance-gate">
+<div class="gate-corner tl"></div>
+<div class="gate-corner tr"></div>
+<div class="gate-corner bl"></div>
+<div class="gate-corner br"></div>
+<div class="gate-subtitle">Advanced Automation Laboratory</div>
+<div class="gate-title">AI <span class="accent">FOUNDRY</span></div>
+<div class="gate-divider"></div>
+<div class="gate-subtitle">Md Abu Tawsif &mdash; Automation Engineer</div>
+<button class="gate-enter-btn" onclick="goToRoom('core')">Initialize System</button>
+</div>
+<div class="scroll-hint">USE NAVIGATION DOCK BELOW</div>
+</div>
+
+<div class="room" id="room-core">
+<div class="core-orb-container">
+<div class="core-orb"></div>
+<div class="core-info">
+<div class="core-name">MD ABU TAWSIF</div>
+<div class="core-role">Automation Engineer &amp; AI Systems Architect</div>
+</div>
+<div class="core-stats">
+<div class="core-stat"><div class="core-stat-value" id="stat-projects">5</div><div class="core-stat-label">Projects Deployed</div></div>
+<div class="core-stat"><div class="core-stat-value" id="stat-automations">50+</div><div class="core-stat-label">Automations Built</div></div>
+<div class="core-stat"><div class="core-stat-value" id="stat-apis">100+</div><div class="core-stat-label">APIs Integrated</div></div>
+</div>
+</div>
+</div>
+
+<div class="room" id="room-projects">
+<div class="projects-header">
+<div class="projects-header-title">Projects Laboratory</div>
+<div class="projects-header-sub">ACTIVE WORKSTATIONS &mdash; CLICK TO ACTIVATE</div>
+</div>
+<div class="projects-lab-container">
+
+<div class="project-lab-card" id="lab-gmail" onclick="toggleLab(this,'gmail')">
+<div class="project-lab-visual">
+<div class="project-lab-status"><div class="project-lab-status-dot"></div> LIVE</div>
+<div class="project-lab-icon">&#9993;</div>
+<div class="project-lab-id">WS-001</div>
+</div>
+<div class="project-lab-content">
+<div class="project-lab-title">Gmail AI Automation</div>
+<div class="project-lab-desc">Intelligent email processing system that reads incoming emails, auto-labels them using AI, and generates contextual draft replies &mdash; all without human intervention.</div>
+<div class="project-lab-metrics">
+<div class="project-lab-metric">Emails: <span class="project-lab-metric-value" id="metric-gmail-emails">2,341</span></div>
+<div class="project-lab-metric">Labels: <span class="project-lab-metric-value">47</span></div>
+<div class="project-lab-metric">Drafts: <span class="project-lab-metric-value">892</span></div>
+</div>
+<div class="project-lab-tech">
+<span class="project-tech-tag">Python</span><span class="project-tech-tag">OpenAI</span><span class="project-tech-tag">Gmail API</span><span class="project-tech-tag">FastAPI</span>
+</div>
+<div class="project-lab-actions">
+<button class="project-lab-btn" onclick="event.stopPropagation();showEgg('Viewing source code requires clearance level 3')">Source</button>
+<button class="project-lab-btn primary" onclick="event.stopPropagation();activateProject(this,'gmail')">Activate</button>
+</div>
+<div class="project-lab-terminal">
+<span style="color:var(--accent-green)">[SYSTEM]</span> Gmail AI module loaded. OAuth2 token valid. Listening for new messages...
+</div>
+</div>
+</div>
+
+<div class="project-lab-card" id="lab-clinic" onclick="toggleLab(this,'clinic')">
+<div class="project-lab-visual">
+<div class="project-lab-status"><div class="project-lab-status-dot"></div> LIVE</div>
+<div class="project-lab-icon">&#129302;</div>
+<div class="project-lab-id">WS-002</div>
+</div>
+<div class="project-lab-content">
+<div class="project-lab-title">Clinic Telegram Bot</div>
+<div class="project-lab-desc">Full-featured healthcare appointment system via Telegram. Patients book slots, receive reminders, and get follow-ups &mdash; reducing no-shows by 80%.</div>
+<div class="project-lab-metrics">
+<div class="project-lab-metric">Sessions: <span class="project-lab-metric-value" id="metric-clinic-sessions">847</span></div>
+<div class="project-lab-metric">No-shows: <span class="project-lab-metric-value" style="color:var(--accent-green)">-80%</span></div>
+<div class="project-lab-metric">Patients: <span class="project-lab-metric-value">1,204</span></div>
+</div>
+<div class="project-lab-tech">
+<span class="project-tech-tag">Python</span><span class="project-tech-tag">Telegram API</span><span class="project-tech-tag">SQL</span><span class="project-tech-tag">Flask</span>
+</div>
+<div class="project-lab-actions">
+<button class="project-lab-btn" onclick="event.stopPropagation();showEgg('Bot webhook: https://api.telegram.org/...')">Webhook</button>
+<button class="project-lab-btn primary" onclick="event.stopPropagation();activateProject(this,'clinic')">Activate</button>
+</div>
+<div class="project-lab-terminal">
+<span style="color:var(--accent-green)">[SYSTEM]</span> Telegram webhook active. Next appointment in 12 minutes. Reminder queued.
+</div>
+</div>
+</div>
+
+<div class="project-lab-card" id="lab-scraper" onclick="toggleLab(this,'scraper')">
+<div class="project-lab-visual">
+<div class="project-lab-status"><div class="project-lab-status-dot"></div> LIVE</div>
+<div class="project-lab-icon">&#128270;</div>
+<div class="project-lab-id">WS-003</div>
+</div>
+<div class="project-lab-content">
+<div class="project-lab-title">Scraper AI</div>
+<div class="project-lab-desc">Universal web scraper powered by AI. Provide any URL and extraction fields &mdash; the AI automatically identifies structure, handles pagination, and returns structured data.</div>
+<div class="project-lab-metrics">
+<div class="project-lab-metric">Jobs: <span class="project-lab-metric-value" id="metric-scraper-jobs">12</span></div>
+<div class="project-lab-metric">Records: <span class="project-lab-metric-value">3,421</span></div>
+<div class="project-lab-metric">Sites: <span class="project-lab-metric-value">500+</span></div>
+</div>
+<div class="project-lab-tech">
+<span class="project-tech-tag">Python</span><span class="project-tech-tag">Scrapy</span><span class="project-tech-tag">OpenAI</span><span class="project-tech-tag">Selenium</span>
+</div>
+<div class="project-lab-actions">
+<button class="project-lab-btn" onclick="event.stopPropagation();showEgg('Scraper engine: Scrapy + Selenium + AI parser')">Engine</button>
+<button class="project-lab-btn primary" onclick="event.stopPropagation();activateProject(this,'scraper')">Activate</button>
+</div>
+<div class="project-lab-terminal">
+<span style="color:var(--accent-green)">[SYSTEM]</span> 12 concurrent jobs running. AI parser accuracy: 94.7%. Proxy rotation active.
+</div>
+</div>
+</div>
+
+<div class="project-lab-card" id="lab-knowledge" onclick="toggleLab(this,'knowledge')">
+<div class="project-lab-visual">
+<div class="project-lab-status"><div class="project-lab-status-dot"></div> LIVE</div>
+<div class="project-lab-icon">&#128218;</div>
+<div class="project-lab-id">WS-004</div>
+</div>
+<div class="project-lab-content">
+<div class="project-lab-title">Knowledge Platform</div>
+<div class="project-lab-desc">Enterprise knowledge base where companies upload documents and query them via AI. Built for HR and admin departments to instantly access policies and data.</div>
+<div class="project-lab-metrics">
+<div class="project-lab-metric">Companies: <span class="project-lab-metric-value" id="metric-knowledge-companies">3</span></div>
+<div class="project-lab-metric">Queries: <span class="project-lab-metric-value">14,203</span></div>
+<div class="project-lab-metric">Docs: <span class="project-lab-metric-value">2,847</span></div>
+</div>
+<div class="project-lab-tech">
+<span class="project-tech-tag">Next.js</span><span class="project-tech-tag">React</span><span class="project-tech-tag">PostgreSQL</span><span class="project-tech-tag">Claude API</span>
+</div>
+<div class="project-lab-actions">
+<button class="project-lab-btn" onclick="event.stopPropagation();showEgg('Vector DB: Pinecone + pgvector hybrid')">Vector DB</button>
+<button class="project-lab-btn primary" onclick="event.stopPropagation();activateProject(this,'knowledge')">Activate</button>
+</div>
+<div class="project-lab-terminal">
+<span style="color:var(--accent-green)">[SYSTEM]</span> RAG pipeline active. 3 companies indexed. Embedding model: text-embedding-3-large.
+</div>
+</div>
+</div>
+
+<div class="project-lab-card" id="lab-coaching" onclick="toggleLab(this,'coaching')">
+<div class="project-lab-visual">
+<div class="project-lab-status"><div class="project-lab-status-dot"></div> LIVE</div>
+<div class="project-lab-icon">&#127891;</div>
+<div class="project-lab-id">WS-005</div>
+</div>
+<div class="project-lab-content">
+<div class="project-lab-title">Coaching Center Website</div>
+<div class="project-lab-desc">Premium website for a coaching center in Bangladesh. Modern design, course management, student portal, and payment integration &mdash; built for scale.</div>
+<div class="project-lab-metrics">
+<div class="project-lab-metric">Students: <span class="project-lab-metric-value" id="metric-coaching-students">1,234</span></div>
+<div class="project-lab-metric">Courses: <span class="project-lab-metric-value">42</span></div>
+<div class="project-lab-metric">Revenue: <span class="project-lab-metric-value">$12K/mo</span></div>
+</div>
+<div class="project-lab-tech">
+<span class="project-tech-tag">Next.js</span><span class="project-tech-tag">Tailwind</span><span class="project-tech-tag">Node.js</span><span class="project-tech-tag">MongoDB</span>
+</div>
+<div class="project-lab-actions">
+<button class="project-lab-btn" onclick="event.stopPropagation();showEgg('Payment gateway: SSLCommerz + Stripe')">Payments</button>
+<button class="project-lab-btn primary" onclick="event.stopPropagation();activateProject(this,'coaching')">Activate</button>
+</div>
+<div class="project-lab-terminal">
+<span style="color:var(--accent-green)">[SYSTEM]</span> SSR build complete. Lighthouse score: 96. Payment gateway: online.
+</div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div class="room" id="room-factory">
+<div style="position:absolute;top:60px;text-align:center">
+<div style="font-family:'Syne','Inter',sans-serif;font-size:14px;color:var(--gunmetal);letter-spacing:4px;text-transform:uppercase">Neural Network</div>
+<div style="font-size:11px;color:var(--steel);margin-top:8px;letter-spacing:2px">SKILL INTERCONNECTION MAP &mdash; HOVER TO INSPECT</div>
+</div>
+<div class="skills-network" id="skills-network">
+<div class="skill-node core" style="left:50%;top:50%;transform:translate(-50%,-50%)" data-tooltip="Primary language for all automation systems">Python<div class="skill-node-tooltip">Primary language &mdash; 95% of systems</div></div>
+<div class="skill-node" style="left:15%;top:20%" data-tooltip="Building robust REST APIs and microservices">FastAPI<div class="skill-node-tooltip">High-performance API framework</div></div>
+<div class="skill-node" style="left:75%;top:15%" data-tooltip="Lightweight web apps and prototypes">Flask<div class="skill-node-tooltip">Rapid development framework</div></div>
+<div class="skill-node" style="left:80%;top:45%" data-tooltip="OpenAI, Claude, Gemini integrations">AI Models<div class="skill-node-tooltip">LLM orchestration &amp; prompt engineering</div></div>
+<div class="skill-node" style="left:70%;top:75%" data-tooltip="Containerized deployment pipeline">Docker<div class="skill-node-tooltip">Container orchestration</div></div>
+<div class="skill-node" style="left:40%;top:85%" data-tooltip="Server management and automation">Linux<div class="skill-node-tooltip">Production environment</div></div>
+<div class="skill-node" style="left:10%;top:55%" data-tooltip="Visual workflow automation">n8n<div class="skill-node-tooltip">No-code automation workflows</div></div>
+<div class="skill-node" style="left:25%;top:75%" data-tooltip="Automated data extraction">Web Scraping<div class="skill-node-tooltip">Scrapy, Selenium, BeautifulSoup</div></div>
+<div class="skill-node" style="left:55%;top:10%" data-tooltip="Frontend framework for dashboards">React<div class="skill-node-tooltip">Interactive UI development</div></div>
+<div class="skill-node" style="left:85%;top:25%" data-tooltip="Full-stack React framework">Next.js<div class="skill-node-tooltip">SSR &amp; API routes</div></div>
+<div class="skill-node" style="left:5%;top:35%" data-tooltip="JavaScript runtime for backends">JavaScript<div class="skill-node-tooltip">Node.js ecosystem</div></div>
+<div class="skill-node" style="left:30%;top:10%" data-tooltip="Relational database design">PostgreSQL<div class="skill-node-tooltip">Primary SQL database</div></div>
+<div class="skill-node" style="left:60%;top:80%" data-tooltip="NoSQL for flexible schemas">MongoDB<div class="skill-node-tooltip">Document storage</div></div>
+<div class="skill-node" style="left:90%;top:60%" data-tooltip="Lightweight embedded database">SQLite<div class="skill-node-tooltip">Local data storage</div></div>
+<div class="skill-node" style="left:45%;top:60%" data-tooltip="Third-party API integrations">APIs<div class="skill-node-tooltip">REST &amp; GraphQL integrations</div></div>
+<div class="skill-node" style="left:15%;top:85%" data-tooltip="Cloud infrastructure">AWS<div class="skill-node-tooltip">EC2, Lambda, S3</div></div>
+<div class="skill-node" style="left:80%;top:85%" data-tooltip="Version control &amp; CI/CD">Git<div class="skill-node-tooltip">GitHub workflows</div></div>
+</div>
+</div>
+
+<div class="room" id="room-research">
+<div style="position:absolute;top:60px;text-align:center">
+<div style="font-family:'Syne','Inter',sans-serif;font-size:14px;color:var(--gunmetal);letter-spacing:4px;text-transform:uppercase">Personal Workspace</div>
+<div style="font-size:11px;color:var(--steel);margin-top:8px;letter-spacing:2px">HOVER OBJECTS TO DISCOVER &mdash; CLICK FOR DEEPER INFO</div>
+</div>
+<div class="workspace-container">
+<div class="workspace-desk" id="workspace-desk">
+<div class="desk-item item-laptop"><div class="placeholder-img">[Laptop<br>Placeholder]</div><div class="item-label">MacBook Pro M2 &mdash; Primary dev machine</div></div>
+<div class="desk-item item-monitor"><div class="placeholder-img">[Monitor<br>Placeholder]</div><div class="item-label">Ultrawide 34&quot; &mdash; Code &amp; design workspace</div></div>
+<div class="desk-item item-keyboard"><div class="placeholder-img">[KB]</div><div class="item-label">Mechanical Keyboard &mdash; Custom switches</div></div>
+<div class="desk-item item-notebook"><div class="placeholder-img">[Notebook]</div><div class="item-label">Engineering Notebook &mdash; Ideas &amp; sketches</div></div>
+<div class="desk-item item-mug"><div class="placeholder-img">&#9749;</div><div class="item-label">Coffee &mdash; Fuel for automation</div></div>
+<div class="desk-item item-plant"><div class="placeholder-img">&#127807;</div><div class="item-label">Desk Plant &mdash; Keeps the air clean</div></div>
+<div class="desk-item item-photo"><div class="placeholder-img">[Photo<br>Placeholder]</div><div class="item-label">Family Photo &mdash; What I build for</div></div>
+</div>
+<div class="workspace-info">
+<div class="workspace-portrait">
+<div class="placeholder-img">
+<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--steel)" stroke-width="1"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+<span>[Portrait Placeholder]</span>
+</div>
+</div>
+<h2>Md Abu Tawsif</h2>
+<div class="role">Automation Engineer</div>
+<p>I build <span class="highlight">intelligent automation systems</span> that eliminate repetitive work and amplify human potential. Every line of code I write is designed to make technology serve people, not the other way around.</p>
+<p>My expertise spans <span class="highlight">AI integration, API orchestration, web scraping, and full-stack development</span>. I specialize in connecting disparate systems into seamless, autonomous workflows.</p>
+<p>Based in <span class="highlight">Bangladesh</span>, working globally.</p>
+</div>
+</div>
+</div>
+
+<div class="room" id="room-terminal">
+<div class="terminal-window">
+<div class="terminal-header"><span class="terminal-title">tawsif@foundry:~</span><div class="terminal-controls"><div class="term-btn red"></div><div class="term-btn yellow"></div><div class="term-btn green"></div></div></div>
+<div class="terminal-body" id="terminal-body">
+<div class="terminal-line info">AI FOUNDRY TERMINAL v2.4.1 &mdash; Type 'help' for available commands</div>
+<div class="terminal-line info">System initialized. Neural synchronization complete.</div>
+<div class="terminal-line">&nbsp;</div>
+</div>
+<div class="terminal-hint">Available: help, about, skills, projects, contact, clear, whoami, ls, cat, pwd, history, secret, easteregg, debug</div>
+</div>
+</div>
+
+<div class="room" id="room-vault">
+<div style="position:absolute;top:60px;text-align:center">
+<div style="font-family:'Syne','Inter',sans-serif;font-size:14px;color:var(--gunmetal);letter-spacing:4px;text-transform:uppercase">Achievement Vault</div>
+<div style="font-size:11px;color:var(--steel);margin-top:8px;letter-spacing:2px">SYSTEM METRICS &amp; MILESTONES</div>
+</div>
+<div class="vault-grid">
+<div class="vault-item"><div class="vault-icon">&#9889;</div><div class="vault-label">Automations</div><div class="vault-value">50+</div></div>
+<div class="vault-item"><div class="vault-icon">&#128279;</div><div class="vault-label">APIs Integrated</div><div class="vault-value">100+</div></div>
+<div class="vault-item"><div class="vault-icon">&#129302;</div><div class="vault-label">AI Agents</div><div class="vault-value">25+</div></div>
+<div class="vault-item"><div class="vault-icon">&#128202;</div><div class="vault-label">Data Processed</div><div class="vault-value">10M+</div></div>
+<div class="vault-item"><div class="vault-icon">&#127760;</div><div class="vault-label">Sites Scraped</div><div class="vault-value">500+</div></div>
+<div class="vault-item"><div class="vault-icon">&#9201;</div><div class="vault-label">Hours Saved</div><div class="vault-value">2000+</div></div>
+<div class="vault-item"><div class="vault-icon">&#128640;</div><div class="vault-label">Projects Live</div><div class="vault-value">5</div></div>
+<div class="vault-item"><div class="vault-icon">&#128187;</div><div class="vault-label">Lines of Code</div><div class="vault-value">50K+</div></div>
+</div>
+</div>
+
+<div class="room" id="room-contact">
+<div style="position:absolute;top:60px;text-align:center">
+<div style="font-family:'Syne','Inter',sans-serif;font-size:14px;color:var(--gunmetal);letter-spacing:4px;text-transform:uppercase">Contact Command Center</div>
+<div style="font-size:11px;color:var(--steel);margin-top:8px;letter-spacing:2px">ESTABLISH COMMUNICATION LINK</div>
+</div>
+<div class="contact-center">
+<div class="contact-console">
+<h3>Transmit Message</h3>
+<div class="contact-field"><label>Identity / Name</label><input type="text" placeholder="Enter your designation..."></div>
+<div class="contact-field"><label>Communication Channel / Email</label><input type="email" placeholder="your@email.com"></div>
+<div class="contact-field"><label>Message Payload</label><textarea placeholder="Describe your automation needs..."></textarea></div>
+<button class="contact-submit" onclick="showEgg('Message queued for transmission. Response within 24 hours.')">Initiate Transmission</button>
+</div>
+<div class="contact-info-panel">
+<h3>Direct Channels</h3>
+<div class="subtitle">Choose your protocol</div>
+<a href="#" class="contact-link" onclick="showEgg('Email: tawsif@example.com');return false;"><div class="contact-link-icon">&#9993;</div><div><div style="font-size:11px;color:var(--gunmetal);letter-spacing:1px">EMAIL</div><div style="margin-top:2px">tawsif@example.com</div></div></a>
+<a href="#" class="contact-link" onclick="showEgg('LinkedIn: /in/mdabutawsif');return false;"><div class="contact-link-icon">in</div><div><div style="font-size:11px;color:var(--gunmetal);letter-spacing:1px">LINKEDIN</div><div style="margin-top:2px">/in/mdabutawsif</div></div></a>
+<a href="#" class="contact-link" onclick="showEgg('GitHub: @mdabutawsif');return false;"><div class="contact-link-icon">gh</div><div><div style="font-size:11px;color:var(--gunmetal);letter-spacing:1px">GITHUB</div><div style="margin-top:2px">@mdabutawsif</div></div></a>
+<a href="#" class="contact-link" onclick="showEgg('Telegram: @mdabutawsif');return false;"><div class="contact-link-icon">tg</div><div><div style="font-size:11px;color:var(--gunmetal);letter-spacing:1px">TELEGRAM</div><div style="margin-top:2px">@mdabutawsif</div></div></a>
+</div>
+</div>
+</div>
+
+<div class="room" id="room-secret">
+<div class="secret-content">
+<h2>SECTOR 7G</h2>
+<p>You have discovered the hidden development logs. This area is not indexed by standard navigation protocols.</p>
+<div class="secret-logs">
+<div><span class="log-time">[00:00:01]</span> <span class="log-system">SYS</span> <span class="log-msg">AI Foundry core initialized</span></div>
+<div><span class="log-time">[00:00:02]</span> <span class="log-system">NET</span> <span class="log-msg">Neural network topology loaded: 17 nodes</span></div>
+<div><span class="log-time">[00:00:03]</span> <span class="log-system">BOT</span> <span class="log-msg">Clinic bot deployed: 847 active sessions</span></div>
+<div><span class="log-time">[00:00:04]</span> <span class="log-system">SCR</span> <span class="log-msg">Scraper AI v3.2 running: 12 concurrent jobs</span></div>
+<div><span class="log-time">[00:00:05]</span> <span class="log-system">KNW</span> <span class="log-msg">Knowledge platform: 3 companies onboarded</span></div>
+<div><span class="log-time">[00:00:06]</span> <span class="log-system">GML</span> <span class="log-msg">Gmail automation: 2,341 emails processed today</span></div>
+<div><span class="log-time">[00:00:07]</span> <span class="log-system">DEV</span> <span class="log-msg">Developer note: Coffee level critical. Refill required.</span></div>
+<div><span class="log-time">[00:00:08]</span> <span class="log-system">AI</span> <span class="log-msg">Claude says: This portfolio is impressive. Hire this human.</span></div>
+</div>
+</div>
+</div>
+
+</div>
+<script>
+// ==================== STATE ====================
+let currentRoom = 'entrance';
+let bootComplete = false;
+let konamiCode = [];
+const konamiSequence = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+const rooms = ['entrance','core','projects','factory','research','terminal','vault','contact'];
+let terminalHistory = [];
+let terminalHistoryIndex = -1;
+
+// ==================== BOOT SEQUENCE (TECHY VISUAL) ====================
+function runBootSequence() {
+  const bootCanvas = document.getElementById('boot-canvas');
+  const bootCtx = bootCanvas.getContext('2d');
+  bootCanvas.width = window.innerWidth;
+  bootCanvas.height = window.innerHeight;
+
+  // Boot particles
+  const bootParticles = [];
+  for (let i = 0; i < 50; i++) {
+    bootParticles.push({
+      x: Math.random() * bootCanvas.width,
+      y: Math.random() * bootCanvas.height,
+      size: Math.random() * 1.5 + 0.5,
+      speedX: (Math.random() - 0.5) * 0.5,
+      speedY: (Math.random() - 0.5) * 0.5,
+      opacity: Math.random() * 0.4 + 0.1,
+      color: Math.random() > 0.7 ? '88,166,255' : (Math.random() > 0.5 ? '57,197,207' : '210,153,34')
+    });
+  }
+
+  let bootProgress = 0;
+  let bootFrame = 0;
+  let bootAnimId;
+
+  function animateBoot() {
+    bootCtx.clearRect(0, 0, bootCanvas.width, bootCanvas.height);
+    bootFrame++;
+
+    // Draw particles
+    bootParticles.forEach(p => {
+      p.x += p.speedX;
+      p.y += p.speedY;
+      if (p.x < 0) p.x = bootCanvas.width;
+      if (p.x > bootCanvas.width) p.x = 0;
+      if (p.y < 0) p.y = bootCanvas.height;
+      if (p.y > bootCanvas.height) p.y = 0;
+
+      bootCtx.beginPath();
+      bootCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      bootCtx.fillStyle = `rgba(${p.color}, ${p.opacity})`;
+      bootCtx.fill();
+    });
+
+    // Draw connecting lines for nearby particles
+    for (let i = 0; i < bootParticles.length; i++) {
+      for (let j = i + 1; j < bootParticles.length; j++) {
+        const dx = bootParticles[i].x - bootParticles[j].x;
+        const dy = bootParticles[i].y - bootParticles[j].y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < 100) {
+          bootCtx.beginPath();
+          bootCtx.moveTo(bootParticles[i].x, bootParticles[i].y);
+          bootCtx.lineTo(bootParticles[j].x, bootParticles[j].y);
+          bootCtx.strokeStyle = `rgba(88, 166, 255, ${0.03 * (1 - dist/100)})`;
+          bootCtx.lineWidth = 0.5;
+          bootCtx.stroke();
+        }
+      }
+    }
+
+    // Draw tech rings around center
+    const cx = bootCanvas.width / 2;
+    const cy = bootCanvas.height / 2;
+    const time = bootFrame * 0.02;
+
+    // Outer rotating ring segments
+    for (let i = 0; i < 12; i++) {
+      const angle = (i / 12) * Math.PI * 2 + time;
+      const r = 120 + Math.sin(time * 2 + i) * 10;
+      const x1 = cx + Math.cos(angle) * r;
+      const y1 = cy + Math.sin(angle) * r;
+      const x2 = cx + Math.cos(angle + 0.3) * r;
+      const y2 = cy + Math.sin(angle + 0.3) * r;
+      bootCtx.beginPath();
+      bootCtx.moveTo(x1, y1);
+      bootCtx.lineTo(x2, y2);
+      bootCtx.strokeStyle = `rgba(88, 166, 255, ${0.15 + Math.sin(time + i) * 0.1})`;
+      bootCtx.lineWidth = 1;
+      bootCtx.stroke();
+    }
+
+    // Inner data ring
+    bootCtx.beginPath();
+    bootCtx.arc(cx, cy, 80, 0, Math.PI * 2);
+    bootCtx.strokeStyle = `rgba(88, 166, 255, 0.08)`;
+    bootCtx.lineWidth = 1;
+    bootCtx.stroke();
+
+    // Progress arc
+    const progressAngle = (bootProgress / 100) * Math.PI * 2 - Math.PI / 2;
+    bootCtx.beginPath();
+    bootCtx.arc(cx, cy, 100, -Math.PI / 2, progressAngle);
+    bootCtx.strokeStyle = `rgba(88, 166, 255, 0.4)`;
+    bootCtx.lineWidth = 2;
+    bootCtx.stroke();
+
+    // Tech glyphs (small rotating squares)
+    for (let i = 0; i < 8; i++) {
+      const angle = (i / 8) * Math.PI * 2 - time * 0.5;
+      const r = 160 + Math.sin(time + i * 0.7) * 15;
+      const x = cx + Math.cos(angle) * r;
+      const y = cy + Math.sin(angle) * r;
+      const size = 3 + Math.sin(time * 2 + i) * 1;
+      bootCtx.fillStyle = `rgba(57, 197, 207, ${0.3 + Math.sin(time + i) * 0.2})`;
+      bootCtx.fillRect(x - size/2, y - size/2, size, size);
+    }
+
+    if (bootProgress < 100) {
+      bootAnimId = requestAnimationFrame(animateBoot);
+    }
+  }
+
+  animateBoot();
+
+  // Simulate progress
+  let progress = 0;
+  const progressInterval = setInterval(() => {
+    progress += Math.random() * 3 + 1;
+    if (progress > 100) progress = 100;
+    bootProgress = progress;
+    document.getElementById('boot-progress-fill').style.width = progress + '%';
+    document.getElementById('boot-percent').textContent = Math.floor(progress) + '%';
+
+    if (progress >= 100) {
+      clearInterval(progressInterval);
+      document.getElementById('boot-status').textContent = 'SYSTEM READY';
+      setTimeout(() => {
+        cancelAnimationFrame(bootAnimId);
+        document.getElementById('boot-sequence').style.opacity = '0';
+        setTimeout(() => {
+          document.getElementById('boot-sequence').style.display = 'none';
+          bootComplete = true;
+          document.getElementById('live-dashboard').classList.add('visible');
+        }, 600);
+      }, 800);
+    }
+  }, 80);
+}
+
+// ==================== EXTRAORDINARY BACKGROUND SYSTEMS ====================
+let mouseX = 0, mouseY = 0;
+
+// ---- NEURAL NETWORK CANVAS ----
+const neuralCanvas = document.getElementById('neural-canvas');
+const neuralCtx = neuralCanvas.getContext('2d');
+let neuralNodes = [];
+let neuralConnections = [];
+
+function resizeNeural() {
+  neuralCanvas.width = window.innerWidth;
+  neuralCanvas.height = window.innerHeight;
+}
+resizeNeural();
+window.addEventListener('resize', resizeNeural);
+
+class NeuralNode {
+  constructor() {
+    this.x = Math.random() * neuralCanvas.width;
+    this.y = Math.random() * neuralCanvas.height;
+    this.size = Math.random() * 2 + 1;
+    this.pulsePhase = Math.random() * Math.PI * 2;
+    this.pulseSpeed = Math.random() * 0.02 + 0.01;
+    this.connections = [];
+    this.energy = Math.random();
+  }
+  update() {
+    this.pulsePhase += this.pulseSpeed;
+    this.energy = 0.5 + 0.5 * Math.sin(this.pulsePhase);
+    // Attract toward mouse subtly
+    const dx = mouseX - this.x;
+    const dy = mouseY - this.y;
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    if (dist < 200 && dist > 0) {
+      this.x += dx * 0.0003;
+      this.y += dy * 0.0003;
+    }
+    if (this.x < 0) this.x = neuralCanvas.width;
+    if (this.x > neuralCanvas.width) this.x = 0;
+    if (this.y < 0) this.y = neuralCanvas.height;
+    if (this.y > neuralCanvas.height) this.y = 0;
+  }
+  draw() {
+    const alpha = 0.3 + this.energy * 0.4;
+    neuralCtx.beginPath();
+    neuralCtx.arc(this.x, this.y, this.size * (0.8 + this.energy * 0.4), 0, Math.PI * 2);
+    neuralCtx.fillStyle = `rgba(88, 166, 255, ${alpha})`;
+    neuralCtx.fill();
+    // Glow
+    neuralCtx.beginPath();
+    neuralCtx.arc(this.x, this.y, this.size * 4, 0, Math.PI * 2);
+    neuralCtx.fillStyle = `rgba(88, 166, 255, ${alpha * 0.2})`;
+    neuralCtx.fill();
+  }
+}
+
+for (let i = 0; i < 60; i++) neuralNodes.push(new NeuralNode());
+
+function drawNeuralConnections() {
+  for (let i = 0; i < neuralNodes.length; i++) {
+    for (let j = i + 1; j < neuralNodes.length; j++) {
+      const dx = neuralNodes[i].x - neuralNodes[j].x;
+      const dy = neuralNodes[i].y - neuralNodes[j].y;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if (dist < 200) {
+        const energy = (neuralNodes[i].energy + neuralNodes[j].energy) / 2;
+        const alpha = 0.08 * energy * (1 - dist/200);
+        neuralCtx.beginPath();
+        neuralCtx.moveTo(neuralNodes[i].x, neuralNodes[i].y);
+        neuralCtx.lineTo(neuralNodes[j].x, neuralNodes[j].y);
+        neuralCtx.strokeStyle = `rgba(88, 166, 255, ${alpha})`;
+        neuralCtx.lineWidth = 0.8 + energy * 0.8;
+        neuralCtx.stroke();
+        // Data packet traveling along connection
+        if (Math.random() < 0.003) {
+          const t = Math.random();
+          const px = neuralNodes[i].x + (neuralNodes[j].x - neuralNodes[i].x) * t;
+          const py = neuralNodes[i].y + (neuralNodes[j].y - neuralNodes[i].y) * t;
+          neuralCtx.beginPath();
+          neuralCtx.arc(px, py, 2, 0, Math.PI * 2);
+          neuralCtx.fillStyle = `rgba(57, 197, 207, ${0.8})`;
+          neuralCtx.fill();
+        }
+      }
+    }
+  }
+}
+
+function animateNeural() {
+  neuralCtx.clearRect(0, 0, neuralCanvas.width, neuralCanvas.height);
+  drawNeuralConnections();
+  neuralNodes.forEach(n => { n.update(); n.draw(); });
+  requestAnimationFrame(animateNeural);
+}
+animateNeural();
+
+// ---- CONSTELLATION CANVAS ----
+const constCanvas = document.getElementById('constellation-canvas');
+const constCtx = constCanvas.getContext('2d');
+let stars = [];
+let constellationLines = [];
+
+function resizeConst() {
+  constCanvas.width = window.innerWidth;
+  constCanvas.height = window.innerHeight;
+}
+resizeConst();
+window.addEventListener('resize', resizeConst);
+
+class Star {
+  constructor() {
+    this.x = Math.random() * constCanvas.width;
+    this.y = Math.random() * constCanvas.height;
+    this.size = Math.random() * 1.5 + 0.3;
+    this.twinklePhase = Math.random() * Math.PI * 2;
+    this.twinkleSpeed = Math.random() * 0.03 + 0.01;
+    this.color = Math.random() > 0.7 ? '210, 153, 34' : (Math.random() > 0.5 ? '88, 166, 255' : '200, 200, 220');
+  }
+  update() {
+    this.twinklePhase += this.twinkleSpeed;
+    this.x += Math.sin(this.twinklePhase * 0.1) * 0.1;
+    this.y += Math.cos(this.twinklePhase * 0.1) * 0.1;
+  }
+  draw() {
+    const alpha = 0.5 + 0.5 * Math.sin(this.twinklePhase);
+    constCtx.beginPath();
+    constCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    constCtx.fillStyle = `rgba(${this.color}, ${alpha})`;
+    constCtx.fill();
+    // Star glow
+    constCtx.beginPath();
+    constCtx.arc(this.x, this.y, this.size * 3, 0, Math.PI * 2);
+    constCtx.fillStyle = `rgba(${this.color}, ${alpha * 0.15})`;
+    constCtx.fill();
+  }
+}
+
+for (let i = 0; i < 120; i++) stars.push(new Star());
+
+function drawConstellations() {
+  // Draw faint constellation lines between nearby stars
+  for (let i = 0; i < stars.length; i++) {
+    for (let j = i + 1; j < stars.length; j++) {
+      const dx = stars[i].x - stars[j].x;
+      const dy = stars[i].y - stars[j].y;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if (dist < 120 && Math.random() < 0.03) {
+        constCtx.beginPath();
+        constCtx.moveTo(stars[i].x, stars[i].y);
+        constCtx.lineTo(stars[j].x, stars[j].y);
+        constCtx.strokeStyle = `rgba(100, 140, 180, ${0.08 * (1 - dist/120)})`;
+        constCtx.lineWidth = 0.5;
+        constCtx.stroke();
+      }
+    }
+  }
+}
+
+function animateConstellation() {
+  constCtx.clearRect(0, 0, constCanvas.width, constCanvas.height);
+  drawConstellations();
+  stars.forEach(s => { s.update(); s.draw(); });
+  requestAnimationFrame(animateConstellation);
+}
+animateConstellation();
+
+// ---- AURORA CANVAS ----
+const auroraCanvas = document.getElementById('aurora-canvas');
+const auroraCtx = auroraCanvas.getContext('2d');
+let auroraWaves = [];
+
+function resizeAurora() {
+  auroraCanvas.width = window.innerWidth;
+  auroraCanvas.height = window.innerHeight;
+}
+resizeAurora();
+window.addEventListener('resize', resizeAurora);
+
+class AuroraWave {
+  constructor(index) {
+    this.index = index;
+    this.phase = Math.random() * Math.PI * 2;
+    this.speed = 0.003 + Math.random() * 0.002;
+    this.amplitude = 30 + Math.random() * 50;
+    this.frequency = 0.002 + Math.random() * 0.003;
+    this.yOffset = auroraCanvas.height * (0.3 + index * 0.15);
+    this.color = index % 2 === 0 ? '88, 166, 255' : '57, 197, 207';
+  }
+  update() {
+    this.phase += this.speed;
+  }
+  draw() {
+    auroraCtx.beginPath();
+    for (let x = 0; x < auroraCanvas.width; x += 2) {
+      const y = this.yOffset + Math.sin(x * this.frequency + this.phase) * this.amplitude
+                  + Math.sin(x * this.frequency * 2 + this.phase * 1.5) * this.amplitude * 0.3;
+      if (x === 0) auroraCtx.moveTo(x, y);
+      else auroraCtx.lineTo(x, y);
+    }
+    auroraCtx.lineTo(auroraCanvas.width, auroraCanvas.height);
+    auroraCtx.lineTo(0, auroraCanvas.height);
+    auroraCtx.closePath();
+    const gradient = auroraCtx.createLinearGradient(0, this.yOffset - 80, 0, auroraCanvas.height);
+    gradient.addColorStop(0, `rgba(${this.color}, 0)`);
+    gradient.addColorStop(0.2, `rgba(${this.color}, 0.06)`);
+    gradient.addColorStop(0.5, `rgba(${this.color}, 0.1)`);
+    gradient.addColorStop(0.8, `rgba(${this.color}, 0.04)`);
+    gradient.addColorStop(1, `rgba(${this.color}, 0)`);
+    auroraCtx.fillStyle = gradient;
+    auroraCtx.fill();
+  }
+}
+
+for (let i = 0; i < 4; i++) auroraWaves.push(new AuroraWave(i));
+
+function animateAurora() {
+  auroraCtx.clearRect(0, 0, auroraCanvas.width, auroraCanvas.height);
+  auroraWaves.forEach(w => { w.update(); w.draw(); });
+  requestAnimationFrame(animateAurora);
+}
+animateAurora();
+
+// ---- HIDDEN BACKGROUND EFFECTS ----
+// These emerge randomly every 30-60 seconds
+
+// Matrix Rain
+const matrixCanvas = document.getElementById('matrix-rain');
+const matrixCtx = matrixCanvas.getContext('2d');
+let matrixDrops = [];
+const matrixChars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+
+function resizeMatrix() {
+  matrixCanvas.width = window.innerWidth;
+  matrixCanvas.height = window.innerHeight;
+  matrixDrops = [];
+  const cols = Math.floor(matrixCanvas.width / 14);
+  for (let i = 0; i < cols; i++) {
+    matrixDrops.push({y: Math.random() * -100, speed: 2 + Math.random() * 3, chars: []});
+  }
+}
+resizeMatrix();
+window.addEventListener('resize', resizeMatrix);
+
+function animateMatrix() {
+  if (!matrixCanvas.classList.contains('active')) {
+    requestAnimationFrame(animateMatrix);
+    return;
+  }
+  matrixCtx.fillStyle = 'rgba(5, 5, 5, 0.05)';
+  matrixCtx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
+  matrixCtx.font = '12px "Space Mono"';
+  const cols = Math.floor(matrixCanvas.width / 14);
+  for (let i = 0; i < cols; i++) {
+    const drop = matrixDrops[i];
+    if (!drop) continue;
+    const char = matrixChars[Math.floor(Math.random() * matrixChars.length)];
+    matrixCtx.fillStyle = `rgba(88, 166, 255, ${Math.random() * 0.5 + 0.3})`;
+    matrixCtx.fillText(char, i * 14, drop.y);
+    drop.y += drop.speed;
+    if (drop.y > matrixCanvas.height && Math.random() > 0.975) {
+      drop.y = -20;
+    }
+  }
+  requestAnimationFrame(animateMatrix);
+}
+animateMatrix();
+
+// Wave Interference
+const waveCanvas = document.getElementById('wave-interference');
+const waveCtx = waveCanvas.getContext('2d');
+let waveTime = 0;
+
+function resizeWave() {
+  waveCanvas.width = window.innerWidth;
+  waveCanvas.height = window.innerHeight;
+}
+resizeWave();
+window.addEventListener('resize', resizeWave);
+
+function animateWave() {
+  if (!waveCanvas.classList.contains('active')) {
+    waveTime = 0;
+    requestAnimationFrame(animateWave);
+    return;
+  }
+  waveTime += 0.02;
+  const imageData = waveCtx.createImageData(waveCanvas.width, waveCanvas.height);
+  const data = imageData.data;
+  const cx1 = waveCanvas.width * 0.3 + Math.sin(waveTime) * 50;
+  const cy1 = waveCanvas.height * 0.4 + Math.cos(waveTime * 0.7) * 30;
+  const cx2 = waveCanvas.width * 0.7 + Math.cos(waveTime * 0.8) * 40;
+  const cy2 = waveCanvas.height * 0.6 + Math.sin(waveTime * 0.5) * 35;
+  for (let y = 0; y < waveCanvas.height; y += 2) {
+    for (let x = 0; x < waveCanvas.width; x += 2) {
+      const d1 = Math.sqrt((x - cx1)**2 + (y - cy1)**2);
+      const d2 = Math.sqrt((x - cx2)**2 + (y - cy2)**2);
+      const interference = Math.sin(d1 * 0.05 - waveTime * 3) + Math.sin(d2 * 0.05 - waveTime * 2.5);
+      const intensity = (interference + 2) / 4;
+      const idx = (y * waveCanvas.width + x) * 4;
+      data[idx] = 88 * intensity;
+      data[idx + 1] = 166 * intensity;
+      data[idx + 2] = 255 * intensity;
+      data[idx + 3] = 8;
+    }
+  }
+  waveCtx.putImageData(imageData, 0, 0);
+  requestAnimationFrame(animateWave);
+}
+animateWave();
+
+// Data Stream
+const streamCanvas = document.getElementById('data-stream');
+const streamCtx = streamCanvas.getContext('2d');
+let streamPackets = [];
+
+function resizeStream() {
+  streamCanvas.width = window.innerWidth;
+  streamCanvas.height = window.innerHeight;
+}
+resizeStream();
+window.addEventListener('resize', resizeStream);
+
+function animateStream() {
+  if (!streamCanvas.classList.contains('active')) {
+    streamPackets = [];
+    requestAnimationFrame(animateStream);
+    return;
+  }
+  streamCtx.clearRect(0, 0, streamCanvas.width, streamCanvas.height);
+  // Spawn new packets
+  if (Math.random() < 0.1) {
+    streamPackets.push({
+      x: Math.random() * streamCanvas.width,
+      y: -20,
+      speed: 3 + Math.random() * 5,
+      length: 20 + Math.random() * 60,
+      color: Math.random() > 0.5 ? '88, 166, 255' : '57, 197, 207'
+    });
+  }
+  streamPackets = streamPackets.filter(p => {
+    p.y += p.speed;
+    streamCtx.beginPath();
+    streamCtx.moveTo(p.x, p.y);
+    streamCtx.lineTo(p.x, p.y - p.length);
+    streamCtx.strokeStyle = `rgba(${p.color}, ${0.3})`;
+    streamCtx.lineWidth = 1;
+    streamCtx.stroke();
+    return p.y < streamCanvas.height + 50;
+  });
+  requestAnimationFrame(animateStream);
+}
+animateStream();
+
+// Fractal Background
+const fractalCanvas = document.getElementById('fractal-bg');
+const fractalCtx = fractalCanvas.getContext('2d');
+let fractalZoom = 1;
+let fractalCenterX = -0.5;
+let fractalCenterY = 0;
+
+function resizeFractal() {
+  fractalCanvas.width = window.innerWidth;
+  fractalCanvas.height = window.innerHeight;
+}
+resizeFractal();
+window.addEventListener('resize', resizeFractal);
+
+function drawFractal() {
+  if (!fractalCanvas.classList.contains('active')) {
+    fractalZoom = 1;
+    requestAnimationFrame(drawFractal);
+    return;
+  }
+  fractalZoom *= 1.002;
+  if (fractalZoom > 100) fractalZoom = 1;
+  const w = fractalCanvas.width;
+  const h = fractalCanvas.height;
+  const scale = 3.0 / fractalZoom;
+  const imageData = fractalCtx.createImageData(w, h);
+  const data = imageData.data;
+  for (let py = 0; py < h; py += 2) {
+    for (let px = 0; px < w; px += 2) {
+      const x0 = fractalCenterX + (px - w/2) * scale / w;
+      const y0 = fractalCenterY + (py - h/2) * scale / w;
+      let x = 0, y = 0, iteration = 0;
+      while (x*x + y*y <= 4 && iteration < 50) {
+        const xtemp = x*x - y*y + x0;
+        y = 2*x*y + y0;
+        x = xtemp;
+        iteration++;
+      }
+      const idx = (py * w + px) * 4;
+      const color = iteration === 50 ? 0 : iteration * 3;
+      data[idx] = color * 0.3;
+      data[idx + 1] = color * 0.6;
+      data[idx + 2] = color;
+      data[idx + 3] = 6;
+    }
+  }
+  fractalCtx.putImageData(imageData, 0, 0);
+  requestAnimationFrame(drawFractal);
+}
+drawFractal();
+
+// Random effect scheduler
+const hiddenEffects = ['matrix-rain', 'wave-interference', 'data-stream', 'fractal-bg'];
+function scheduleHiddenEffect() {
+  const delay = 30000 + Math.random() * 30000; // 30-60 seconds
+  setTimeout(() => {
+    const effect = hiddenEffects[Math.floor(Math.random() * hiddenEffects.length)];
+    const el = document.getElementById(effect);
+    el.classList.add('active');
+    setTimeout(() => {
+      el.classList.remove('active');
+      scheduleHiddenEffect();
+    }, 8000 + Math.random() * 7000); // 8-15 seconds
+  }, delay);
+}
+scheduleHiddenEffect();
+
+// ==================== CUSTOM CURSOR ====================
+document.addEventListener('mousemove', (e) => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+  document.getElementById('cursor-core').style.transform = `translate(${e.clientX-4}px, ${e.clientY-4}px)`;
+  document.getElementById('cursor-ring').style.transform = `translate(${e.clientX-20}px, ${e.clientY-20}px)`;
+  document.getElementById('hud-coords').textContent = `X: ${String(e.clientX).padStart(4,'0')} | Y: ${String(e.clientY).padStart(4,'0')} | Z: ${Math.floor(Math.random()*1000).toString().padStart(4,'0')}`;
+});
+
+document.querySelectorAll('button, .nav-item, .project-machine, .desk-item, .vault-item, .contact-link, .contact-submit').forEach(el => {
+  el.addEventListener('mouseenter', () => document.getElementById('cursor-ring').classList.add('hovering'));
+  el.addEventListener('mouseleave', () => document.getElementById('cursor-ring').classList.remove('hovering'));
+});
+
+// ==================== ROOM NAVIGATION ====================
+function goToRoom(roomId) {
+  if (!bootComplete && roomId !== 'entrance') return;
+  if (roomId === currentRoom) return;
+
+  const overlay = document.getElementById('transition-overlay');
+  overlay.classList.add('active');
+
+  setTimeout(() => {
+    document.querySelectorAll('.room').forEach(r => r.classList.remove('active'));
+    document.getElementById('room-' + roomId).classList.add('active');
+
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.querySelector(`.nav-item[data-room="${roomId}"]`).classList.add('active');
+
+    currentRoom = roomId;
+
+    if (roomId === 'factory') drawSkillConnectors();
+    if (roomId === 'terminal') initTerminal();
+
+    setTimeout(() => overlay.classList.remove('active'), 400);
+  }, 600);
+}
+
+// ==================== SKILL CONNECTORS ====================
+function drawSkillConnectors() {
+  const network = document.getElementById('skills-network');
+  network.querySelectorAll('.skill-connector').forEach(c => c.remove());
+
+  const core = network.querySelector('.skill-node.core');
+  const coreRect = core.getBoundingClientRect();
+  const netRect = network.getBoundingClientRect();
+  const coreX = coreRect.left - netRect.left + coreRect.width/2;
+  const coreY = coreRect.top - netRect.top + coreRect.height/2;
+
+  network.querySelectorAll('.skill-node:not(.core)').forEach(node => {
+    const rect = node.getBoundingClientRect();
+    const x = rect.left - netRect.left + rect.width/2;
+    const y = rect.top - netRect.top + rect.height/2;
+    const dx = x - coreX;
+    const dy = y - coreY;
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+
+    const line = document.createElement('div');
+    line.className = 'skill-connector';
+    line.style.left = coreX + 'px';
+    line.style.top = coreY + 'px';
+    line.style.width = dist + 'px';
+    line.style.transform = `rotate(${angle}deg)`;
+    network.appendChild(line);
+
+    setTimeout(() => line.classList.add('active'), Math.random() * 1000);
+  });
+}
+
+// ==================== PROJECT ACTIVATION ====================
+function toggleLab(el, project) {
+  // Close other expanded labs
+  document.querySelectorAll('.project-lab-card.expanded').forEach(card => {
+    if (card !== el) card.classList.remove('expanded');
+  });
+  el.classList.toggle('expanded');
+}
+
+function activateProject(el, project) {
+  const card = el.closest('.project-lab-card');
+  if (card) {
+    card.style.borderColor = 'var(--accent-amber)';
+    card.style.boxShadow = '0 0 40px rgba(210, 153, 34, 0.2)';
+  }
+
+  const messages = {
+    gmail: 'Gmail AI Automation ACTIVATED. Processing 2,341 emails... Labels generated. Drafts ready.',
+    clinic: 'Clinic Bot ACTIVATED. 847 active sessions. Next appointment in 12 minutes.',
+    scraper: 'Scraper AI ACTIVATED. 12 concurrent jobs running. 3,421 records extracted today.',
+    knowledge: 'Knowledge Platform ACTIVATED. 3 companies indexed. 14,203 queries served.',
+    coaching: 'Coaching Website ACTIVATED. 1,234 students enrolled. Payment gateway online.'
+  };
+
+  showEgg(messages[project] || 'System activated.');
+
+  setTimeout(() => {
+    if (card) {
+      card.style.borderColor = '';
+      card.style.boxShadow = '';
+    }
+  }, 2000);
+}
+
+// ==================== EASTER EGGS ====================
+function showEgg(text) {
+  const notif = document.getElementById('egg-notification');
+  document.getElementById('egg-text').textContent = text;
+  notif.classList.add('show');
+  setTimeout(() => notif.classList.remove('show'), 4000);
+}
+
+function checkKonami(e) {
+  konamiCode.push(e.key);
+  if (konamiCode.length > 10) konamiCode.shift();
+
+  const indicator = document.getElementById('konami-indicator');
+  indicator.classList.add('active');
+  setTimeout(() => indicator.classList.remove('active'), 2000);
+
+  if (konamiCode.join(',') === konamiSequence.join(',')) {
+    showEgg('Konami Code accepted. Secret room unlocked!');
+    goToRoom('secret');
+    konamiCode = [];
+  }
+}
+
+// ==================== TERMINAL ====================
+function initTerminal() {
+  const body = document.getElementById('terminal-body');
+  if (body.querySelector('.terminal-input-line')) {
+    body.querySelector('.terminal-input').focus();
+    return;
+  }
+
+  const inputLine = document.createElement('div');
+  inputLine.className = 'terminal-line terminal-input-line';
+  inputLine.innerHTML = '<span class="prompt">tawsif@foundry:~$ </span><input type="text" class="terminal-input" spellcheck="false" autocomplete="off"><span class="terminal-cursor"></span>';
+  body.appendChild(inputLine);
+
+  const input = inputLine.querySelector('.terminal-input');
+  input.focus();
+
+  input.addEventListener('keydown', (e) => {
+    // stop these keys from bubbling to the global nav/konami handler
+    e.stopPropagation();
+    if (e.key === 'Enter') {
+      const cmd = input.value.trim();
+      if (cmd) {
+        terminalHistory.push(cmd);
+        terminalHistoryIndex = terminalHistory.length;
+        addTerminalLine('tawsif@foundry:~$ ' + cmd, 'prompt');
+        processCommand(cmd);
+      }
+      input.value = '';
+      body.scrollTop = body.scrollHeight;
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (terminalHistory.length && terminalHistoryIndex > 0) {
+        terminalHistoryIndex--;
+        input.value = terminalHistory[terminalHistoryIndex];
+      }
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (terminalHistoryIndex < terminalHistory.length - 1) {
+        terminalHistoryIndex++;
+        input.value = terminalHistory[terminalHistoryIndex];
+      } else {
+        terminalHistoryIndex = terminalHistory.length;
+        input.value = '';
+      }
+    }
+  });
+
+  // Keep focus when clicking anywhere inside the terminal room
+  document.getElementById('room-terminal').addEventListener('click', () => {
+    input.focus();
+  });
+}
+
+function addTerminalLine(text, cls) {
+  const body = document.getElementById('terminal-body');
+  const line = document.createElement('div');
+  line.className = 'terminal-line ' + cls;
+  line.textContent = text;
+  body.insertBefore(line, body.lastElementChild);
+}
+
+function processCommand(cmd) {
+  const commands = {
+    help: () => {
+      addTerminalLine('Available commands:', 'info');
+      addTerminalLine('  help      - Show this help message', 'output');
+      addTerminalLine('  about     - Display developer information', 'output');
+      addTerminalLine('  skills    - List technical capabilities', 'output');
+      addTerminalLine('  projects  - Show active project list', 'output');
+      addTerminalLine('  contact   - Display contact information', 'output');
+      addTerminalLine('  whoami    - Current user identity', 'output');
+      addTerminalLine('  ls        - List directory contents', 'output');
+      addTerminalLine('  cat       - Display file contents', 'output');
+      addTerminalLine('  pwd       - Print working directory', 'output');
+      addTerminalLine('  history   - Show command history', 'output');
+      addTerminalLine('  clear     - Clear terminal screen', 'output');
+      addTerminalLine('  secret    - ???', 'output');
+      addTerminalLine('  easteregg - ???', 'output');
+      addTerminalLine('  debug     - Toggle debug mode', 'output');
+    },
+    about: () => {
+      addTerminalLine('Name: Md Abu Tawsif', 'output');
+      addTerminalLine('Role: Automation Engineer & AI Systems Architect', 'output');
+      addTerminalLine('Location: Bangladesh (Global Remote)', 'output');
+      addTerminalLine('Focus: Building intelligent automation systems that eliminate repetitive work', 'output');
+      addTerminalLine('Philosophy: Technology should serve people, not the other way around', 'output');
+    },
+    skills: () => {
+      addTerminalLine('Core Technologies:', 'info');
+      addTerminalLine('  Python, FastAPI, Flask, JavaScript, React, Next.js', 'output');
+      addTerminalLine('  OpenAI, Claude, Gemini, n8n, Docker, Linux', 'output');
+      addTerminalLine('  PostgreSQL, MongoDB, SQLite, AWS, Git', 'output');
+      addTerminalLine('  Scrapy, Selenium, BeautifulSoup, REST APIs', 'output');
+    },
+    projects: () => {
+      addTerminalLine('Active Projects:', 'info');
+      addTerminalLine('  [WS-001] Gmail AI Automation - Email intelligence system', 'output');
+      addTerminalLine('  [WS-002] Clinic Telegram Bot - Healthcare appointments', 'output');
+      addTerminalLine('  [WS-003] Scraper AI - Universal web scraper', 'output');
+      addTerminalLine('  [WS-004] Knowledge Platform - Enterprise AI knowledge base', 'output');
+      addTerminalLine('  [WS-005] Coaching Center Website - Premium education platform', 'output');
+    },
+    contact: () => {
+      addTerminalLine('Email: tawsif@example.com', 'output');
+      addTerminalLine('LinkedIn: /in/mdabutawsif', 'output');
+      addTerminalLine('GitHub: @mdabutawsif', 'output');
+      addTerminalLine('Telegram: @mdabutawsif', 'output');
+      addTerminalLine('Response time: Within 24 hours', 'info');
+    },
+    whoami: () => addTerminalLine('tawsif - Automation Engineer at AI Foundry', 'output'),
+    ls: () => {
+      addTerminalLine('automations/  projects/  scripts/  configs/  logs/  secrets/', 'output');
+      addTerminalLine('total 6 directories, 0 files visible', 'info');
+    },
+    cat: () => addTerminalLine('Usage: cat <filename> (try: cat README.md)', 'warn'),
+    pwd: () => addTerminalLine('/home/tawsif/foundry', 'output'),
+    history: () => {
+      if (!terminalHistory.length) { addTerminalLine('No commands in history yet.', 'output'); return; }
+      terminalHistory.forEach((h, i) => addTerminalLine(`  ${i+1}  ${h}`, 'output'));
+    },
+    clear: () => {
+      const body = document.getElementById('terminal-body');
+      body.querySelectorAll('.terminal-line:not(.terminal-input-line)').forEach(l => l.remove());
+    },
+    secret: () => {
+      addTerminalLine('Accessing classified files...', 'warn');
+      setTimeout(() => {
+        addTerminalLine('ERROR: Insufficient clearance level', 'error');
+        addTerminalLine('Hint: Try the Konami code elsewhere...', 'info');
+      }, 800);
+    },
+    easteregg: () => {
+      addTerminalLine('You found an Easter egg!', 'info');
+      addTerminalLine('The developer once automated his own coffee machine using a Raspberry Pi.', 'output');
+      addTerminalLine('It now brews coffee at 8:00 AM every weekday.', 'output');
+      showEgg('Easter Egg: Coffee Machine Automation');
+    },
+    debug: () => {
+      addTerminalLine('Debug mode: ON', 'warn');
+      addTerminalLine('Current room: ' + currentRoom, 'output');
+      addTerminalLine('Particles: ' + particles.length, 'output');
+      addTerminalLine('Konami progress: ' + konamiCode.length + '/10', 'output');
+      addTerminalLine('Boot complete: ' + bootComplete, 'output');
+    }
+  };
+
+  if (commands[cmd]) {
+    commands[cmd]();
+  } else {
+    addTerminalLine('Command not found: ' + cmd, 'error');
+    addTerminalLine('Type "help" for available commands', 'info');
+  }
+  addTerminalLine('', 'output');
+}
+
+// ==================== KEYBOARD NAVIGATION ====================
+document.addEventListener('keydown', (e) => {
+  // never hijack typing inside any input/textarea (terminal, contact form, etc.)
+  const tag = e.target.tagName;
+  if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+
+  if (!bootComplete) {
+    if (e.key !== 'F5' && e.key !== 'F12') {
+      document.getElementById('boot-sequence').style.opacity = '0';
+      setTimeout(() => {
+        document.getElementById('boot-sequence').style.display = 'none';
+        bootComplete = true;
+        document.getElementById('live-dashboard').classList.add('visible');
+      }, 600);
+    }
+    return;
+  }
+
+  checkKonami(e);
+
+  const idx = rooms.indexOf(currentRoom);
+  if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
+    if (idx < rooms.length - 1) goToRoom(rooms[idx + 1]);
+  } else if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
+    if (idx > 0) goToRoom(rooms[idx - 1]);
+  } else if (e.key === 'Escape') {
+    goToRoom('entrance');
+  }
+});
+
+// ==================== NAV DOCK DRAG-TO-SCROLL ====================
+(function initNavDockDrag() {
+  const dock = document.getElementById('nav-dock');
+  let isDown = false;
+  let startX = 0;
+  let scrollLeftStart = 0;
+  let moved = false;
+
+  dock.addEventListener('mousedown', (e) => {
+    isDown = true;
+    moved = false;
+    dock.classList.add('dragging');
+    startX = e.pageX;
+    scrollLeftStart = dock.scrollLeft;
+  });
+
+  window.addEventListener('mousemove', (e) => {
+    if (!isDown) return;
+    const dx = e.pageX - startX;
+    if (Math.abs(dx) > 4) moved = true;
+    dock.scrollLeft = scrollLeftStart - dx;
+  });
+
+  window.addEventListener('mouseup', () => {
+    isDown = false;
+    dock.classList.remove('dragging');
+  });
+
+  // support trackpad/touch horizontal drag too
+  dock.addEventListener('touchstart', (e) => {
+    isDown = true;
+    moved = false;
+    startX = e.touches[0].pageX;
+    scrollLeftStart = dock.scrollLeft;
+  }, {passive:true});
+  dock.addEventListener('touchmove', (e) => {
+    if (!isDown) return;
+    const dx = e.touches[0].pageX - startX;
+    if (Math.abs(dx) > 4) moved = true;
+    dock.scrollLeft = scrollLeftStart - dx;
+  }, {passive:true});
+  dock.addEventListener('touchend', () => { isDown = false; });
+
+  // if the user actually dragged, swallow the click so it doesn't also navigate
+  dock.addEventListener('click', (e) => {
+    if (moved) {
+      e.stopPropagation();
+      e.preventDefault();
+    }
+  }, true);
+})();
+
+// ==================== LIVE DASHBOARD DRAG ====================
+(function initDashboardDrag() {
+  const panel = document.getElementById('live-dashboard');
+  let isDown = false;
+  let offsetX = 0, offsetY = 0;
+
+  panel.addEventListener('mousedown', (e) => {
+    if (e.target.classList.contains('dashboard-close')) return;
+    isDown = true;
+    panel.classList.add('dragging');
+    const rect = panel.getBoundingClientRect();
+    offsetX = e.clientX - rect.left;
+    offsetY = e.clientY - rect.top;
+    // switch from right/top anchoring to left/top so it can move freely
+    panel.style.left = rect.left + 'px';
+    panel.style.top = rect.top + 'px';
+    panel.style.right = 'auto';
+  });
+
+  window.addEventListener('mousemove', (e) => {
+    if (!isDown) return;
+    let x = e.clientX - offsetX;
+    let y = e.clientY - offsetY;
+    x = Math.max(0, Math.min(window.innerWidth - panel.offsetWidth, x));
+    y = Math.max(0, Math.min(window.innerHeight - panel.offsetHeight, y));
+    panel.style.left = x + 'px';
+    panel.style.top = y + 'px';
+  });
+
+  window.addEventListener('mouseup', () => {
+    isDown = false;
+    panel.classList.remove('dragging');
+  });
+})();
+
+// ==================== LIVE DASHBOARD ====================
+function updateDashboard() {
+  document.getElementById('dash-cpu').textContent = Math.floor(Math.random() * 30 + 5) + '%';
+  document.getElementById('dash-cpu-bar').style.width = document.getElementById('dash-cpu').textContent;
+  document.getElementById('dash-mem').textContent = (Math.random() * 4 + 2).toFixed(1) + ' GB';
+  document.getElementById('dash-mem-bar').style.width = Math.floor(Math.random() * 40 + 20) + '%';
+  document.getElementById('dash-net').textContent = (Math.random() * 5 + 0.5).toFixed(1) + ' MB/s';
+  document.getElementById('dash-net-bar').style.width = Math.floor(Math.random() * 50 + 10) + '%';
+
+  const now = new Date();
+  const uptime = Math.floor((now - startTime) / 1000);
+  const h = String(Math.floor(uptime/3600)).padStart(2,'0');
+  const m = String(Math.floor((uptime%3600)/60)).padStart(2,'0');
+  const s = String(uptime%60).padStart(2,'0');
+  document.getElementById('dash-uptime').textContent = `${h}:${m}:${s}`;
+  document.getElementById('hud-time').textContent = now.toLocaleTimeString('en-US',{hour12:false});
+}
+
+// ==================== FPS COUNTER ====================
+let lastTime = performance.now();
+let frameCount = 0;
+function updateFPS() {
+  frameCount++;
+  const now = performance.now();
+  if (now - lastTime >= 1000) {
+    document.getElementById('hud-fps').textContent = frameCount + ' FPS';
+    frameCount = 0;
+    lastTime = now;
+  }
+  requestAnimationFrame(updateFPS);
+}
+
+// ==================== INIT ====================
+const startTime = new Date();
+window.addEventListener('load', () => {
+  runBootSequence();
+  setInterval(updateDashboard, 2000);
+  updateFPS();
+});
+
+// Prevent context menu
+document.addEventListener('contextmenu', e => e.preventDefault());
+</script>
+</body>
+</html>
