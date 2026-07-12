@@ -45,31 +45,17 @@ html{width:100%;overflow-x:hidden}body{width:100%;min-height:100vh;background:va
 #boot-logo{position:fixed;top:40px;left:50%;transform:translateX(-50%);font-family:'Syne','Inter',sans-serif;font-size:11px;letter-spacing:6px;color:var(--gunmetal);text-transform:uppercase;opacity:0;animation:logoFade 1s ease forwards 0.5s;z-index:3}
 #boot-logo span{color:var(--accent-blue)}
 @keyframes logoFade{0%{opacity:0;transform:translateX(-50%) translateY(-10px)}100%{opacity:1;transform:translateX(-50%) translateY(0)}}
-#particle-canvas{position:fixed;inset:0;z-index:0}
-.vignette{position:fixed;inset:0;pointer-events:none;z-index:5;background:radial-gradient(ellipse at center,transparent 50%,rgba(0,0,0,0.35) 100%)}
-.scanlines{position:fixed;inset:0;pointer-events:none;z-index:5;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.015) 2px,rgba(0,0,0,0.015) 4px)}
 
-#neural-canvas{position:fixed;inset:0;z-index:0}
-#constellation-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.6}
-#aurora-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.3}
-#matrix-rain{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0;transition:opacity 2s ease}
-#matrix-rain.active{opacity:0.08}
-#wave-interference{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0;transition:opacity 2s ease}
-#wave-interference.active{opacity:0.15}
-#data-stream{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0;transition:opacity 2s ease}
-#data-stream.active{opacity:0.1}
-#fractal-bg{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0;transition:opacity 3s ease}
-#fractal-bg.active{opacity:0.12}
+/* ===== ROTATING BACKGROUND CANVASES ===== */
+.bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0;transition:opacity 3s ease}
+.bg-canvas.active{opacity:1}
+#neural-canvas{opacity:1}
+#constellation-canvas{opacity:0.6}
+#aurora-canvas{opacity:0.3}
+
 #transition-overlay{position:fixed;inset:0;background:var(--void);z-index:50;pointer-events:none;opacity:0;transition:opacity 0.6s ease}
 #transition-overlay.active{opacity:1}
-#matrix-rain{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0;transition:opacity 2s ease}
-#matrix-rain.active{opacity:0.08}
-#wave-interference{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0;transition:opacity 2s ease}
-#wave-interference.active{opacity:0.15}
-#data-stream{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0;transition:opacity 2s ease}
-#data-stream.active{opacity:0.1}
-#fractal-bg{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0;transition:opacity 3s ease}
-#fractal-bg.active{opacity:0.12}
+
 #hud{position:fixed;inset:0;pointer-events:none;z-index:100;padding:24px 32px;display:flex;flex-direction:column;justify-content:space-between}
 .hud-top{display:flex;justify-content:space-between;align-items:flex-start}
 .hud-brand{font-family:'Syne','Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:4px;color:var(--steel);text-transform:uppercase}
@@ -140,8 +126,6 @@ html{width:100%;overflow-x:hidden}body{width:100%;min-height:100vh;background:va
 .core-stat{text-align:center}
 .core-stat-value{font-size:24px;font-weight:600;color:var(--accent-blue);font-family:'Syne','Inter',sans-serif}
 .core-stat-label{font-size:9px;color:var(--gunmetal);letter-spacing:2px;text-transform:uppercase;margin-top:4px}
-#room-projects{background:radial-gradient(ellipse at 70% 30%,rgba(210,153,34,0.03) 0%,transparent 60%)}
-/* ===== PROJECTS LAB - REDESIGNED ===== */
 #room-projects{background:radial-gradient(ellipse at 70% 30%,rgba(210,153,34,0.03) 0%,transparent 60%)}
 .projects-header{position:absolute;top:50px;text-align:center;z-index:10}
 .projects-header-title{font-family:'Syne','Inter',sans-serif;font-size:13px;color:var(--gunmetal);letter-spacing:4px;text-transform:uppercase}
@@ -270,6 +254,12 @@ html{width:100%;overflow-x:hidden}body{width:100%;min-height:100vh;background:va
 .room::-webkit-scrollbar-track{background:transparent}
 .room::-webkit-scrollbar-thumb{background:var(--gunmetal);border-radius:3px}
 .room::-webkit-scrollbar-thumb:hover{background:var(--steel)}
+
+/* ===== BG EFFECT INDICATOR ===== */
+#bg-indicator{position:fixed;bottom:80px;left:32px;z-index:90;font-size:9px;color:var(--gunmetal);letter-spacing:2px;text-transform:uppercase;opacity:0;transition:opacity 0.5s ease}
+#bg-indicator.visible{opacity:1}
+#bg-indicator .bg-name{color:var(--accent-blue);font-weight:600}
+
 @media(max-width:1200px){
   .projects-lab-container{padding:0 20px}
   .project-lab-card{grid-template-columns:220px 1fr}
@@ -371,11 +361,7 @@ html{width:100%;overflow-x:hidden}body{width:100%;min-height:100vh;background:va
   .project-lab-card:hover .project-lab-actions{opacity:1;transform:none}
 }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms!important;transition-duration:0.01ms!important}}
-
-.desk-item img{width:100%;height:100%;object-fit:cover;display:block}
-.workspace-portrait img{width:100%;height:100%;object-fit:cover;display:block}
 </style>
-<base target="_blank">
 <base target="_blank">
 <base target="_blank">
 </head>
@@ -395,16 +381,23 @@ html{width:100%;overflow-x:hidden}body{width:100%;min-height:100vh;background:va
 <div id="boot-percent">0%</div>
 </div>
 
-<canvas id="neural-canvas"></canvas>
-<canvas id="constellation-canvas"></canvas>
-<canvas id="aurora-canvas"></canvas>
-<canvas id="matrix-rain"></canvas>
-<canvas id="wave-interference"></canvas>
-<canvas id="data-stream"></canvas>
-<canvas id="fractal-bg"></canvas>
+<!-- ===== ROTATING BACKGROUND CANVASES ===== -->
+<canvas id="neural-canvas" class="bg-canvas active"></canvas>
+<canvas id="constellation-canvas" class="bg-canvas active"></canvas>
+<canvas id="aurora-canvas" class="bg-canvas active"></canvas>
+<canvas id="matrix-rain" class="bg-canvas"></canvas>
+<canvas id="wave-interference" class="bg-canvas"></canvas>
+<canvas id="data-stream" class="bg-canvas"></canvas>
+<canvas id="fractal-bg" class="bg-canvas"></canvas>
+<canvas id="particle-field" class="bg-canvas"></canvas>
+<canvas id="grid-terrain" class="bg-canvas"></canvas>
+<canvas id="fiber-optics" class="bg-canvas"></canvas>
 <div class="vignette"></div>
 <div class="scanlines"></div>
 <div id="transition-overlay"></div>
+
+<!-- Background effect indicator -->
+<div id="bg-indicator">MODE: <span class="bg-name" id="bg-name">NEURAL NETWORK</span></div>
 
 <div id="hud">
 <div class="hud-top">
@@ -662,24 +655,17 @@ html{width:100%;overflow-x:hidden}body{width:100%;min-height:100vh;background:va
 </div>
 <div class="workspace-container">
 <div class="workspace-desk" id="workspace-desk">
-<div class="desk-item item-laptop">
-<img src="assets/macbook.jpeg" alt="Laptop" style="width:100%;height:100%;object-fit:cover;display:block;"><div class="item-label">MacBook Pro M2 &mdash; Primary dev machine</div></div>
-<div class="desk-item item-monitor">
-<img src="assets/desktop.jpeg" alt="Monitor" style="width:100%;height:100%;object-fit:cover;display:block;"><div class="item-label">Ultrawide 34&quot; &mdash; Code &amp; design workspace</div></div>
-<div class="desk-item item-keyboard">
-<img src="assets/kb.png" alt="Keyboard" style="width:100%;height:100%;object-fit:cover;display:block;"><div class="item-label">Mechanical Keyboard &mdash; Custom switches</div></div>
-<div class="desk-item item-notebook">
-<img src="assets/notebook.png" alt="Notebook" style="width:100%;height:100%;object-fit:cover;display:block;"><div class="item-label">Engineering Notebook &mdash; Ideas &amp; sketches</div></div>
-<div class="desk-item item-mug">
-<img src="assets/coffee.jpg" alt="Mug" style="width:100%;height:100%;object-fit:cover;display:block;"><div class="item-label">Coffee &mdash; Fuel for automation</div></div>
-<div class="desk-item item-plant">
-<img src="assets/plant.jpeg" alt="Plant" style="width:100%;height:100%;object-fit:cover;display:block;"><div class="item-label">Desk Plant &mdash; Keeps the air clean</div></div>
-<div class="desk-item item-photo">
-<img src="assets/pic.jpg" alt="Photo" style="width:100%;height:100%;object-fit:cover;display:block;"><div class="item-label">Family Photo &mdash; What I build for</div></div>
+<div class="desk-item item-laptop"><img src="assets/macbook.jpeg" alt="MacBook" style="width:100%;height:100%;object-fit:cover;opacity:0.7"><div class="item-label">MacBook Pro M2 &mdash; Primary dev machine</div></div>
+<div class="desk-item item-monitor"><img src="assets/desktop.jpeg" alt="Monitor" style="width:100%;height:100%;object-fit:cover;opacity:0.7"><div class="item-label">Ultrawide 34&quot; &mdash; Code &amp; design workspace</div></div>
+<div class="desk-item item-keyboard"><img src="assets/kb.png" alt="Keyboard" style="width:100%;height:100%;object-fit:cover;opacity:0.7"><div class="item-label">Mechanical Keyboard &mdash; Custom switches</div></div>
+<div class="desk-item item-notebook"><img src="assets/notebook.png" alt="Notebook" style="width:100%;height:100%;object-fit:cover;opacity:0.7"><div class="item-label">Engineering Notebook &mdash; Ideas &amp; sketches</div></div>
+<div class="desk-item item-mug"><img src="assets/coffee.jpg" alt="Coffee" style="width:100%;height:100%;object-fit:cover;opacity:0.7"><div class="item-label">Coffee &mdash; Fuel for automation</div></div>
+<div class="desk-item item-plant"><img src="assets/plant.jpeg" alt="Plant" style="width:100%;height:100%;object-fit:cover;opacity:0.7"><div class="item-label">Desk Plant &mdash; Keeps the air clean</div></div>
+<div class="desk-item item-photo"><img src="assets/pic.jpg" alt="Photo" style="width:100%;height:100%;object-fit:cover;opacity:0.7"><div class="item-label">Family Photo &mdash; What I build for</div></div>
 </div>
 <div class="workspace-info">
 <div class="workspace-portrait">
-<img src="assets/pic.jpg" alt="Md Abu Tawsif" style="width:100%;height:100%;object-fit:cover;display:block;">
+<img src="assets/pic.jpg" alt="Portrait" style="width:100%;height:100%;object-fit:cover;opacity:0.8">
 </div>
 <h2>Md Abu Tawsif</h2>
 <div class="role">Automation Engineer</div>
@@ -761,6 +747,7 @@ html{width:100%;overflow-x:hidden}body{width:100%;min-height:100vh;background:va
 </div>
 
 </div>
+
 <script>
 // ==================== STATE ====================
 let currentRoom = 'entrance';
@@ -771,14 +758,119 @@ const rooms = ['entrance','core','projects','factory','research','terminal','vau
 let terminalHistory = [];
 let terminalHistoryIndex = -1;
 
-// ==================== BOOT SEQUENCE (TECHY VISUAL) ====================
+// ==================== BACKGROUND ROTATION SYSTEM ====================
+// Define all background effect modes
+const bgModes = [
+  {
+    id: 'neural-constellation',
+    name: 'NEURAL NETWORK',
+    layers: ['neural-canvas', 'constellation-canvas', 'aurora-canvas'],
+    baseOpacity: { 'neural-canvas': 1, 'constellation-canvas': 0.6, 'aurora-canvas': 0.3 }
+  },
+  {
+    id: 'matrix-rain',
+    name: 'MATRIX RAIN',
+    layers: ['matrix-rain'],
+    baseOpacity: { 'matrix-rain': 0.08 }
+  },
+  {
+    id: 'wave-interference',
+    name: 'WAVE INTERFERENCE',
+    layers: ['wave-interference'],
+    baseOpacity: { 'wave-interference': 0.15 }
+  },
+  {
+    id: 'data-stream',
+    name: 'DATA STREAM',
+    layers: ['data-stream'],
+    baseOpacity: { 'data-stream': 0.1 }
+  },
+  {
+    id: 'fractal-zoom',
+    name: 'FRACTAL ZOOM',
+    layers: ['fractal-bg'],
+    baseOpacity: { 'fractal-bg': 0.12 }
+  },
+  {
+    id: 'particle-field',
+    name: 'PARTICLE FIELD',
+    layers: ['particle-field'],
+    baseOpacity: { 'particle-field': 0.25 }
+  },
+  {
+    id: 'grid-terrain',
+    name: 'GRID TERRAIN',
+    layers: ['grid-terrain'],
+    baseOpacity: { 'grid-terrain': 0.2 }
+  },
+  {
+    id: 'fiber-optics',
+    name: 'FIBER OPTICS',
+    layers: ['fiber-optics'],
+    baseOpacity: { 'fiber-optics': 0.18 }
+  }
+];
+
+let currentBgModeIndex = 0;
+let bgRotationTimer = null;
+const BG_ROTATION_INTERVAL = 20000; // 20 seconds per mode
+
+function activateBgMode(modeIndex) {
+  const mode = bgModes[modeIndex];
+
+  // Fade out all canvases
+  document.querySelectorAll('.bg-canvas').forEach(canvas => {
+    canvas.classList.remove('active');
+    canvas.style.opacity = '0';
+  });
+
+  // Fade in the new mode's layers
+  mode.layers.forEach(layerId => {
+    const canvas = document.getElementById(layerId);
+    if (canvas) {
+      canvas.classList.add('active');
+      canvas.style.opacity = mode.baseOpacity[layerId] || 1;
+    }
+  });
+
+  // Update indicator
+  const indicator = document.getElementById('bg-indicator');
+  const nameEl = document.getElementById('bg-name');
+  if (indicator && nameEl) {
+    nameEl.textContent = mode.name;
+    indicator.classList.add('visible');
+    // Flash the indicator
+    indicator.style.opacity = '1';
+    setTimeout(() => { indicator.style.opacity = '0.6'; }, 2000);
+  }
+
+  currentBgModeIndex = modeIndex;
+}
+
+function nextBgMode() {
+  const nextIndex = (currentBgModeIndex + 1) % bgModes.length;
+  activateBgMode(nextIndex);
+}
+
+function startBgRotation() {
+  if (bgRotationTimer) clearInterval(bgRotationTimer);
+  bgRotationTimer = setInterval(nextBgMode, BG_ROTATION_INTERVAL);
+}
+
+function stopBgRotation() {
+  if (bgRotationTimer) {
+    clearInterval(bgRotationTimer);
+    bgRotationTimer = null;
+  }
+}
+
+// ==================== BOOT SEQUENCE ====================
 function runBootSequence() {
   const bootCanvas = document.getElementById('boot-canvas');
   const bootCtx = bootCanvas.getContext('2d');
   bootCanvas.width = window.innerWidth;
   bootCanvas.height = window.innerHeight;
 
-  // Boot particles
   const bootParticles = [];
   for (let i = 0; i < 50; i++) {
     bootParticles.push({
@@ -800,22 +892,18 @@ function runBootSequence() {
     bootCtx.clearRect(0, 0, bootCanvas.width, bootCanvas.height);
     bootFrame++;
 
-    // Draw particles
     bootParticles.forEach(p => {
-      p.x += p.speedX;
-      p.y += p.speedY;
+      p.x += p.speedX; p.y += p.speedY;
       if (p.x < 0) p.x = bootCanvas.width;
       if (p.x > bootCanvas.width) p.x = 0;
       if (p.y < 0) p.y = bootCanvas.height;
       if (p.y > bootCanvas.height) p.y = 0;
-
       bootCtx.beginPath();
       bootCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
       bootCtx.fillStyle = `rgba(${p.color}, ${p.opacity})`;
       bootCtx.fill();
     });
 
-    // Draw connecting lines for nearby particles
     for (let i = 0; i < bootParticles.length; i++) {
       for (let j = i + 1; j < bootParticles.length; j++) {
         const dx = bootParticles[i].x - bootParticles[j].x;
@@ -832,12 +920,10 @@ function runBootSequence() {
       }
     }
 
-    // Draw tech rings around center
     const cx = bootCanvas.width / 2;
     const cy = bootCanvas.height / 2;
     const time = bootFrame * 0.02;
 
-    // Outer rotating ring segments
     for (let i = 0; i < 12; i++) {
       const angle = (i / 12) * Math.PI * 2 + time;
       const r = 120 + Math.sin(time * 2 + i) * 10;
@@ -853,14 +939,12 @@ function runBootSequence() {
       bootCtx.stroke();
     }
 
-    // Inner data ring
     bootCtx.beginPath();
     bootCtx.arc(cx, cy, 80, 0, Math.PI * 2);
     bootCtx.strokeStyle = `rgba(88, 166, 255, 0.08)`;
     bootCtx.lineWidth = 1;
     bootCtx.stroke();
 
-    // Progress arc
     const progressAngle = (bootProgress / 100) * Math.PI * 2 - Math.PI / 2;
     bootCtx.beginPath();
     bootCtx.arc(cx, cy, 100, -Math.PI / 2, progressAngle);
@@ -868,7 +952,6 @@ function runBootSequence() {
     bootCtx.lineWidth = 2;
     bootCtx.stroke();
 
-    // Tech glyphs (small rotating squares)
     for (let i = 0; i < 8; i++) {
       const angle = (i / 8) * Math.PI * 2 - time * 0.5;
       const r = 160 + Math.sin(time + i * 0.7) * 15;
@@ -886,7 +969,6 @@ function runBootSequence() {
 
   animateBoot();
 
-  // Simulate progress
   let progress = 0;
   const progressInterval = setInterval(() => {
     progress += Math.random() * 3 + 1;
@@ -905,20 +987,33 @@ function runBootSequence() {
           document.getElementById('boot-sequence').style.display = 'none';
           bootComplete = true;
           document.getElementById('live-dashboard').classList.add('visible');
+          document.getElementById('bg-indicator').classList.add('visible');
+          startBgRotation();
         }, 600);
       }, 800);
     }
   }, 80);
 }
 
-// ==================== EXTRAORDINARY BACKGROUND SYSTEMS ====================
+// ==================== MOUSE TRACKING ====================
 let mouseX = 0, mouseY = 0;
+document.addEventListener('mousemove', (e) => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+  document.getElementById('cursor-core').style.transform = `translate(${e.clientX-4}px, ${e.clientY-4}px)`;
+  document.getElementById('cursor-ring').style.transform = `translate(${e.clientX-20}px, ${e.clientY-20}px)`;
+  document.getElementById('hud-coords').textContent = `X: ${String(e.clientX).padStart(4,'0')} | Y: ${String(e.clientY).padStart(4,'0')} | Z: ${Math.floor(Math.random()*1000).toString().padStart(4,'0')}`;
+});
 
-// ---- NEURAL NETWORK CANVAS ----
+document.querySelectorAll('button, .nav-item, .desk-item, .vault-item, .contact-link, .contact-submit, .project-lab-card, .skill-node').forEach(el => {
+  el.addEventListener('mouseenter', () => document.getElementById('cursor-ring').classList.add('hovering'));
+  el.addEventListener('mouseleave', () => document.getElementById('cursor-ring').classList.remove('hovering'));
+});
+
+// ==================== NEURAL NETWORK CANVAS ====================
 const neuralCanvas = document.getElementById('neural-canvas');
 const neuralCtx = neuralCanvas.getContext('2d');
 let neuralNodes = [];
-let neuralConnections = [];
 
 function resizeNeural() {
   neuralCanvas.width = window.innerWidth;
@@ -934,13 +1029,11 @@ class NeuralNode {
     this.size = Math.random() * 2 + 1;
     this.pulsePhase = Math.random() * Math.PI * 2;
     this.pulseSpeed = Math.random() * 0.02 + 0.01;
-    this.connections = [];
     this.energy = Math.random();
   }
   update() {
     this.pulsePhase += this.pulseSpeed;
     this.energy = 0.5 + 0.5 * Math.sin(this.pulsePhase);
-    // Attract toward mouse subtly
     const dx = mouseX - this.x;
     const dy = mouseY - this.y;
     const dist = Math.sqrt(dx*dx + dy*dy);
@@ -959,7 +1052,6 @@ class NeuralNode {
     neuralCtx.arc(this.x, this.y, this.size * (0.8 + this.energy * 0.4), 0, Math.PI * 2);
     neuralCtx.fillStyle = `rgba(88, 166, 255, ${alpha})`;
     neuralCtx.fill();
-    // Glow
     neuralCtx.beginPath();
     neuralCtx.arc(this.x, this.y, this.size * 4, 0, Math.PI * 2);
     neuralCtx.fillStyle = `rgba(88, 166, 255, ${alpha * 0.2})`;
@@ -984,7 +1076,6 @@ function drawNeuralConnections() {
         neuralCtx.strokeStyle = `rgba(88, 166, 255, ${alpha})`;
         neuralCtx.lineWidth = 0.8 + energy * 0.8;
         neuralCtx.stroke();
-        // Data packet traveling along connection
         if (Math.random() < 0.003) {
           const t = Math.random();
           const px = neuralNodes[i].x + (neuralNodes[j].x - neuralNodes[i].x) * t;
@@ -1007,11 +1098,10 @@ function animateNeural() {
 }
 animateNeural();
 
-// ---- CONSTELLATION CANVAS ----
+// ==================== CONSTELLATION CANVAS ====================
 const constCanvas = document.getElementById('constellation-canvas');
 const constCtx = constCanvas.getContext('2d');
 let stars = [];
-let constellationLines = [];
 
 function resizeConst() {
   constCanvas.width = window.innerWidth;
@@ -1040,7 +1130,6 @@ class Star {
     constCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
     constCtx.fillStyle = `rgba(${this.color}, ${alpha})`;
     constCtx.fill();
-    // Star glow
     constCtx.beginPath();
     constCtx.arc(this.x, this.y, this.size * 3, 0, Math.PI * 2);
     constCtx.fillStyle = `rgba(${this.color}, ${alpha * 0.15})`;
@@ -1051,7 +1140,6 @@ class Star {
 for (let i = 0; i < 120; i++) stars.push(new Star());
 
 function drawConstellations() {
-  // Draw faint constellation lines between nearby stars
   for (let i = 0; i < stars.length; i++) {
     for (let j = i + 1; j < stars.length; j++) {
       const dx = stars[i].x - stars[j].x;
@@ -1077,7 +1165,7 @@ function animateConstellation() {
 }
 animateConstellation();
 
-// ---- AURORA CANVAS ----
+// ==================== AURORA CANVAS ====================
 const auroraCanvas = document.getElementById('aurora-canvas');
 const auroraCtx = auroraCanvas.getContext('2d');
 let auroraWaves = [];
@@ -1099,9 +1187,7 @@ class AuroraWave {
     this.yOffset = auroraCanvas.height * (0.3 + index * 0.15);
     this.color = index % 2 === 0 ? '88, 166, 255' : '57, 197, 207';
   }
-  update() {
-    this.phase += this.speed;
-  }
+  update() { this.phase += this.speed; }
   draw() {
     auroraCtx.beginPath();
     for (let x = 0; x < auroraCanvas.width; x += 2) {
@@ -1133,10 +1219,7 @@ function animateAurora() {
 }
 animateAurora();
 
-// ---- HIDDEN BACKGROUND EFFECTS ----
-// These emerge randomly every 30-60 seconds
-
-// Matrix Rain
+// ==================== MATRIX RAIN ====================
 const matrixCanvas = document.getElementById('matrix-rain');
 const matrixCtx = matrixCanvas.getContext('2d');
 let matrixDrops = [];
@@ -1178,7 +1261,7 @@ function animateMatrix() {
 }
 animateMatrix();
 
-// Wave Interference
+// ==================== WAVE INTERFERENCE ====================
 const waveCanvas = document.getElementById('wave-interference');
 const waveCtx = waveCanvas.getContext('2d');
 let waveTime = 0;
@@ -1221,7 +1304,7 @@ function animateWave() {
 }
 animateWave();
 
-// Data Stream
+// ==================== DATA STREAM ====================
 const streamCanvas = document.getElementById('data-stream');
 const streamCtx = streamCanvas.getContext('2d');
 let streamPackets = [];
@@ -1240,7 +1323,6 @@ function animateStream() {
     return;
   }
   streamCtx.clearRect(0, 0, streamCanvas.width, streamCanvas.height);
-  // Spawn new packets
   if (Math.random() < 0.1) {
     streamPackets.push({
       x: Math.random() * streamCanvas.width,
@@ -1264,7 +1346,7 @@ function animateStream() {
 }
 animateStream();
 
-// Fractal Background
+// ==================== FRACTAL BACKGROUND ====================
 const fractalCanvas = document.getElementById('fractal-bg');
 const fractalCtx = fractalCanvas.getContext('2d');
 let fractalZoom = 1;
@@ -1315,35 +1397,247 @@ function drawFractal() {
 }
 drawFractal();
 
-// Random effect scheduler
-const hiddenEffects = ['matrix-rain', 'wave-interference', 'data-stream', 'fractal-bg'];
-function scheduleHiddenEffect() {
-  const delay = 30000 + Math.random() * 30000; // 30-60 seconds
-  setTimeout(() => {
-    const effect = hiddenEffects[Math.floor(Math.random() * hiddenEffects.length)];
-    const el = document.getElementById(effect);
-    el.classList.add('active');
-    setTimeout(() => {
-      el.classList.remove('active');
-      scheduleHiddenEffect();
-    }, 8000 + Math.random() * 7000); // 8-15 seconds
-  }, delay);
+// ==================== PARTICLE FIELD (NEW) ====================
+const particleCanvas = document.getElementById('particle-field');
+const particleCtx = particleCanvas.getContext('2d');
+let fieldParticles = [];
+
+function resizeParticleField() {
+  particleCanvas.width = window.innerWidth;
+  particleCanvas.height = window.innerHeight;
 }
-scheduleHiddenEffect();
+resizeParticleField();
+window.addEventListener('resize', resizeParticleField);
 
-// ==================== CUSTOM CURSOR ====================
-document.addEventListener('mousemove', (e) => {
-  mouseX = e.clientX;
-  mouseY = e.clientY;
-  document.getElementById('cursor-core').style.transform = `translate(${e.clientX-4}px, ${e.clientY-4}px)`;
-  document.getElementById('cursor-ring').style.transform = `translate(${e.clientX-20}px, ${e.clientY-20}px)`;
-  document.getElementById('hud-coords').textContent = `X: ${String(e.clientX).padStart(4,'0')} | Y: ${String(e.clientY).padStart(4,'0')} | Z: ${Math.floor(Math.random()*1000).toString().padStart(4,'0')}`;
-});
+class FieldParticle {
+  constructor() {
+    this.x = Math.random() * particleCanvas.width;
+    this.y = Math.random() * particleCanvas.height;
+    this.vx = (Math.random() - 0.5) * 0.8;
+    this.vy = (Math.random() - 0.5) * 0.8;
+    this.size = Math.random() * 2 + 0.5;
+    this.life = Math.random() * 200 + 100;
+    this.maxLife = this.life;
+    this.color = Math.random() > 0.6 ? '88,166,255' : (Math.random() > 0.5 ? '57,197,207' : '210,153,34');
+  }
+  update() {
+    this.x += this.vx;
+    this.y += this.vy;
+    this.life--;
+    // Mouse repulsion
+    const dx = this.x - mouseX;
+    const dy = this.y - mouseY;
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    if (dist < 100 && dist > 0) {
+      this.vx += (dx / dist) * 0.05;
+      this.vy += (dy / dist) * 0.05;
+    }
+    // Damping
+    this.vx *= 0.99;
+    this.vy *= 0.99;
+    // Wrap
+    if (this.x < 0) this.x = particleCanvas.width;
+    if (this.x > particleCanvas.width) this.x = 0;
+    if (this.y < 0) this.y = particleCanvas.height;
+    if (this.y > particleCanvas.height) this.y = 0;
+  }
+  draw() {
+    const alpha = (this.life / this.maxLife) * 0.6;
+    particleCtx.beginPath();
+    particleCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    particleCtx.fillStyle = `rgba(${this.color}, ${alpha})`;
+    particleCtx.fill();
+  }
+}
 
-document.querySelectorAll('button, .nav-item, .project-machine, .desk-item, .vault-item, .contact-link, .contact-submit').forEach(el => {
-  el.addEventListener('mouseenter', () => document.getElementById('cursor-ring').classList.add('hovering'));
-  el.addEventListener('mouseleave', () => document.getElementById('cursor-ring').classList.remove('hovering'));
-});
+for (let i = 0; i < 150; i++) fieldParticles.push(new FieldParticle());
+
+function animateParticleField() {
+  if (!particleCanvas.classList.contains('active')) {
+    requestAnimationFrame(animateParticleField);
+    return;
+  }
+  particleCtx.fillStyle = 'rgba(5, 5, 5, 0.03)';
+  particleCtx.fillRect(0, 0, particleCanvas.width, particleCanvas.height);
+
+  // Spawn new particles
+  if (fieldParticles.length < 150 && Math.random() < 0.3) {
+    fieldParticles.push(new FieldParticle());
+  }
+
+  fieldParticles = fieldParticles.filter(p => {
+    p.update();
+    p.draw();
+    return p.life > 0;
+  });
+
+  // Draw trails between close particles
+  for (let i = 0; i < fieldParticles.length; i++) {
+    for (let j = i + 1; j < fieldParticles.length; j++) {
+      const dx = fieldParticles[i].x - fieldParticles[j].x;
+      const dy = fieldParticles[i].y - fieldParticles[j].y;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if (dist < 80) {
+        particleCtx.beginPath();
+        particleCtx.moveTo(fieldParticles[i].x, fieldParticles[i].y);
+        particleCtx.lineTo(fieldParticles[j].x, fieldParticles[j].y);
+        particleCtx.strokeStyle = `rgba(88, 166, 255, ${0.04 * (1 - dist/80)})`;
+        particleCtx.lineWidth = 0.5;
+        particleCtx.stroke();
+      }
+    }
+  }
+
+  requestAnimationFrame(animateParticleField);
+}
+animateParticleField();
+
+// ==================== GRID TERRAIN (NEW) ====================
+const gridCanvas = document.getElementById('grid-terrain');
+const gridCtx = gridCanvas.getContext('2d');
+let gridTime = 0;
+
+function resizeGrid() {
+  gridCanvas.width = window.innerWidth;
+  gridCanvas.height = window.innerHeight;
+}
+resizeGrid();
+window.addEventListener('resize', resizeGrid);
+
+function animateGridTerrain() {
+  if (!gridCanvas.classList.contains('active')) {
+    gridTime = 0;
+    requestAnimationFrame(animateGridTerrain);
+    return;
+  }
+  gridTime += 0.01;
+  gridCtx.fillStyle = 'rgba(5, 5, 5, 0.08)';
+  gridCtx.fillRect(0, 0, gridCanvas.width, gridCanvas.height);
+
+  const spacing = 40;
+  const perspective = 300;
+  const horizonY = gridCanvas.height * 0.4;
+
+  for (let z = 1; z < 20; z++) {
+    const depth = z / 20;
+    const y = horizonY + (gridCanvas.height - horizonY) * depth;
+    const alpha = (1 - depth) * 0.15;
+
+    // Horizontal lines
+    gridCtx.beginPath();
+    gridCtx.moveTo(0, y);
+    gridCtx.lineTo(gridCanvas.width, y);
+    gridCtx.strokeStyle = `rgba(88, 166, 255, ${alpha})`;
+    gridCtx.lineWidth = 0.5;
+    gridCtx.stroke();
+
+    // Wave effect on horizontal lines
+    const waveY = y + Math.sin(gridTime + z * 0.3) * 5 * depth;
+    gridCtx.beginPath();
+    gridCtx.moveTo(0, waveY);
+    for (let x = 0; x < gridCanvas.width; x += 10) {
+      const wy = waveY + Math.sin(x * 0.02 + gridTime * 2 + z) * 3 * depth;
+      gridCtx.lineTo(x, wy);
+    }
+    gridCtx.strokeStyle = `rgba(57, 197, 207, ${alpha * 0.5})`;
+    gridCtx.lineWidth = 0.3;
+    gridCtx.stroke();
+  }
+
+  // Vertical perspective lines
+  for (let x = -gridCanvas.width; x < gridCanvas.width * 2; x += spacing * 2) {
+    const centerX = gridCanvas.width / 2 + Math.sin(gridTime * 0.5) * 50;
+    const dx = x - centerX;
+    gridCtx.beginPath();
+    gridCtx.moveTo(centerX + dx * 0.1, horizonY);
+    gridCtx.lineTo(centerX + dx * 2, gridCanvas.height);
+    gridCtx.strokeStyle = `rgba(88, 166, 255, ${0.03})`;
+    gridCtx.lineWidth = 0.5;
+    gridCtx.stroke();
+  }
+
+  requestAnimationFrame(animateGridTerrain);
+}
+animateGridTerrain();
+
+// ==================== FIBER OPTICS (NEW) ====================
+const fiberCanvas = document.getElementById('fiber-optics');
+const fiberCtx = fiberCanvas.getContext('2d');
+let fibers = [];
+
+function resizeFiber() {
+  fiberCanvas.width = window.innerWidth;
+  fiberCanvas.height = window.innerHeight;
+}
+resizeFiber();
+window.addEventListener('resize', resizeFiber);
+
+class Fiber {
+  constructor() {
+    this.x = Math.random() * fiberCanvas.width;
+    this.y = Math.random() * fiberCanvas.height;
+    this.angle = Math.random() * Math.PI * 2;
+    this.length = 50 + Math.random() * 150;
+    this.speed = 0.5 + Math.random() * 1.5;
+    this.color = Math.random() > 0.5 ? '88,166,255' : '57,197,207';
+    this.thickness = 0.5 + Math.random() * 1.5;
+    this.pulsePhase = Math.random() * Math.PI * 2;
+    this.pulseSpeed = 0.02 + Math.random() * 0.03;
+  }
+  update() {
+    this.pulsePhase += this.pulseSpeed;
+    this.x += Math.cos(this.angle) * this.speed * 0.3;
+    this.y += Math.sin(this.angle) * this.speed * 0.3;
+    if (this.x < -this.length) this.x = fiberCanvas.width + this.length;
+    if (this.x > fiberCanvas.width + this.length) this.x = -this.length;
+    if (this.y < -this.length) this.y = fiberCanvas.height + this.length;
+    if (this.y > fiberCanvas.height + this.length) this.y = -this.length;
+  }
+  draw() {
+    const alpha = 0.3 + 0.4 * Math.sin(this.pulsePhase);
+    const endX = this.x + Math.cos(this.angle) * this.length;
+    const endY = this.y + Math.sin(this.angle) * this.length;
+
+    // Glow
+    fiberCtx.beginPath();
+    fiberCtx.moveTo(this.x, this.y);
+    fiberCtx.lineTo(endX, endY);
+    fiberCtx.strokeStyle = `rgba(${this.color}, ${alpha * 0.3})`;
+    fiberCtx.lineWidth = this.thickness * 4;
+    fiberCtx.stroke();
+
+    // Core
+    fiberCtx.beginPath();
+    fiberCtx.moveTo(this.x, this.y);
+    fiberCtx.lineTo(endX, endY);
+    fiberCtx.strokeStyle = `rgba(${this.color}, ${alpha})`;
+    fiberCtx.lineWidth = this.thickness;
+    fiberCtx.stroke();
+
+    // Data packet traveling
+    const packetT = (Math.sin(this.pulsePhase * 2) + 1) / 2;
+    const px = this.x + (endX - this.x) * packetT;
+    const py = this.y + (endY - this.y) * packetT;
+    fiberCtx.beginPath();
+    fiberCtx.arc(px, py, 2, 0, Math.PI * 2);
+    fiberCtx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+    fiberCtx.fill();
+  }
+}
+
+for (let i = 0; i < 40; i++) fibers.push(new Fiber());
+
+function animateFiberOptics() {
+  if (!fiberCanvas.classList.contains('active')) {
+    requestAnimationFrame(animateFiberOptics);
+    return;
+  }
+  fiberCtx.fillStyle = 'rgba(5, 5, 5, 0.05)';
+  fiberCtx.fillRect(0, 0, fiberCanvas.width, fiberCanvas.height);
+  fibers.forEach(f => { f.update(); f.draw(); });
+  requestAnimationFrame(animateFiberOptics);
+}
+animateFiberOptics();
 
 // ==================== ROOM NAVIGATION ====================
 function goToRoom(roomId) {
@@ -1356,15 +1650,11 @@ function goToRoom(roomId) {
   setTimeout(() => {
     document.querySelectorAll('.room').forEach(r => r.classList.remove('active'));
     document.getElementById('room-' + roomId).classList.add('active');
-
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     document.querySelector(`.nav-item[data-room="${roomId}"]`).classList.add('active');
-
     currentRoom = roomId;
-
     if (roomId === 'factory') drawSkillConnectors();
     if (roomId === 'terminal') initTerminal();
-
     setTimeout(() => overlay.classList.remove('active'), 400);
   }, 600);
 }
@@ -1373,7 +1663,6 @@ function goToRoom(roomId) {
 function drawSkillConnectors() {
   const network = document.getElementById('skills-network');
   network.querySelectorAll('.skill-connector').forEach(c => c.remove());
-
   const core = network.querySelector('.skill-node.core');
   const coreRect = core.getBoundingClientRect();
   const netRect = network.getBoundingClientRect();
@@ -1388,7 +1677,6 @@ function drawSkillConnectors() {
     const dy = y - coreY;
     const dist = Math.sqrt(dx*dx + dy*dy);
     const angle = Math.atan2(dy, dx) * 180 / Math.PI;
-
     const line = document.createElement('div');
     line.className = 'skill-connector';
     line.style.left = coreX + 'px';
@@ -1396,14 +1684,12 @@ function drawSkillConnectors() {
     line.style.width = dist + 'px';
     line.style.transform = `rotate(${angle}deg)`;
     network.appendChild(line);
-
     setTimeout(() => line.classList.add('active'), Math.random() * 1000);
   });
 }
 
 // ==================== PROJECT ACTIVATION ====================
 function toggleLab(el, project) {
-  // Close other expanded labs
   document.querySelectorAll('.project-lab-card.expanded').forEach(card => {
     if (card !== el) card.classList.remove('expanded');
   });
@@ -1416,7 +1702,6 @@ function activateProject(el, project) {
     card.style.borderColor = 'var(--accent-amber)';
     card.style.boxShadow = '0 0 40px rgba(210, 153, 34, 0.2)';
   }
-
   const messages = {
     gmail: 'Gmail AI Automation ACTIVATED. Processing 2,341 emails... Labels generated. Drafts ready.',
     clinic: 'Clinic Bot ACTIVATED. 847 active sessions. Next appointment in 12 minutes.',
@@ -1424,14 +1709,9 @@ function activateProject(el, project) {
     knowledge: 'Knowledge Platform ACTIVATED. 3 companies indexed. 14,203 queries served.',
     coaching: 'Coaching Website ACTIVATED. 1,234 students enrolled. Payment gateway online.'
   };
-
   showEgg(messages[project] || 'System activated.');
-
   setTimeout(() => {
-    if (card) {
-      card.style.borderColor = '';
-      card.style.boxShadow = '';
-    }
+    if (card) { card.style.borderColor = ''; card.style.boxShadow = ''; }
   }, 2000);
 }
 
@@ -1446,11 +1726,9 @@ function showEgg(text) {
 function checkKonami(e) {
   konamiCode.push(e.key);
   if (konamiCode.length > 10) konamiCode.shift();
-
   const indicator = document.getElementById('konami-indicator');
   indicator.classList.add('active');
   setTimeout(() => indicator.classList.remove('active'), 2000);
-
   if (konamiCode.join(',') === konamiSequence.join(',')) {
     showEgg('Konami Code accepted. Secret room unlocked!');
     goToRoom('secret');
@@ -1465,17 +1743,13 @@ function initTerminal() {
     body.querySelector('.terminal-input').focus();
     return;
   }
-
   const inputLine = document.createElement('div');
   inputLine.className = 'terminal-line terminal-input-line';
   inputLine.innerHTML = '<span class="prompt">tawsif@foundry:~$ </span><input type="text" class="terminal-input" spellcheck="false" autocomplete="off"><span class="terminal-cursor"></span>';
   body.appendChild(inputLine);
-
   const input = inputLine.querySelector('.terminal-input');
   input.focus();
-
   input.addEventListener('keydown', (e) => {
-    // stop these keys from bubbling to the global nav/konami handler
     e.stopPropagation();
     if (e.key === 'Enter') {
       const cmd = input.value.trim();
@@ -1504,11 +1778,7 @@ function initTerminal() {
       }
     }
   });
-
-  // Keep focus when clicking anywhere inside the terminal room
-  document.getElementById('room-terminal').addEventListener('click', () => {
-    input.focus();
-  });
+  document.getElementById('room-terminal').addEventListener('click', () => input.focus());
 }
 
 function addTerminalLine(text, cls) {
@@ -1537,6 +1807,7 @@ function processCommand(cmd) {
       addTerminalLine('  secret    - ???', 'output');
       addTerminalLine('  easteregg - ???', 'output');
       addTerminalLine('  debug     - Toggle debug mode', 'output');
+      addTerminalLine('  bg        - Cycle background effect', 'output');
     },
     about: () => {
       addTerminalLine('Name: Md Abu Tawsif', 'output');
@@ -1598,9 +1869,13 @@ function processCommand(cmd) {
     debug: () => {
       addTerminalLine('Debug mode: ON', 'warn');
       addTerminalLine('Current room: ' + currentRoom, 'output');
-      addTerminalLine('Particles: ' + particles.length, 'output');
+      addTerminalLine('Background mode: ' + bgModes[currentBgModeIndex].name, 'output');
       addTerminalLine('Konami progress: ' + konamiCode.length + '/10', 'output');
       addTerminalLine('Boot complete: ' + bootComplete, 'output');
+    },
+    bg: () => {
+      nextBgMode();
+      addTerminalLine('Background switched to: ' + bgModes[currentBgModeIndex].name, 'info');
     }
   };
 
@@ -1615,7 +1890,6 @@ function processCommand(cmd) {
 
 // ==================== KEYBOARD NAVIGATION ====================
 document.addEventListener('keydown', (e) => {
-  // never hijack typing inside any input/textarea (terminal, contact form, etc.)
   const tag = e.target.tagName;
   if (tag === 'INPUT' || tag === 'TEXTAREA') return;
 
@@ -1626,6 +1900,8 @@ document.addEventListener('keydown', (e) => {
         document.getElementById('boot-sequence').style.display = 'none';
         bootComplete = true;
         document.getElementById('live-dashboard').classList.add('visible');
+        document.getElementById('bg-indicator').classList.add('visible');
+        startBgRotation();
       }, 600);
     }
     return;
@@ -1640,6 +1916,10 @@ document.addEventListener('keydown', (e) => {
     if (idx > 0) goToRoom(rooms[idx - 1]);
   } else if (e.key === 'Escape') {
     goToRoom('entrance');
+  } else if (e.key === 'b' || e.key === 'B') {
+    // Quick background switch with 'B' key
+    nextBgMode();
+    showEgg('Background: ' + bgModes[currentBgModeIndex].name);
   }
 });
 
@@ -1671,7 +1951,6 @@ document.addEventListener('keydown', (e) => {
     dock.classList.remove('dragging');
   });
 
-  // support trackpad/touch horizontal drag too
   dock.addEventListener('touchstart', (e) => {
     isDown = true;
     moved = false;
@@ -1686,7 +1965,6 @@ document.addEventListener('keydown', (e) => {
   }, {passive:true});
   dock.addEventListener('touchend', () => { isDown = false; });
 
-  // if the user actually dragged, swallow the click so it doesn't also navigate
   dock.addEventListener('click', (e) => {
     if (moved) {
       e.stopPropagation();
@@ -1708,7 +1986,6 @@ document.addEventListener('keydown', (e) => {
     const rect = panel.getBoundingClientRect();
     offsetX = e.clientX - rect.left;
     offsetY = e.clientY - rect.top;
-    // switch from right/top anchoring to left/top so it can move freely
     panel.style.left = rect.left + 'px';
     panel.style.top = rect.top + 'px';
     panel.style.right = 'auto';
