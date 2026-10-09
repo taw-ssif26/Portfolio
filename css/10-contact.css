@@ -1,0 +1,19 @@
+#room-contact{background:radial-gradient(ellipse at 50% 30%,rgba(88,166,255,0.03) 0%,transparent 60%)}
+.contact-center{display:flex;gap:60px;align-items:center;max-width:1100px;padding:0 40px;margin:auto}
+.contact-console{width:500px;border:1px solid var(--charcoal);background:rgba(13,17,23,0.7);padding:40px}
+.contact-console h3{font-family:'Syne','Inter',sans-serif;font-size:18px;font-weight:600;color:var(--white);margin-bottom:24px;letter-spacing:2px}
+.contact-field{margin-bottom:20px}
+.contact-field label{display:block;font-size:10px;color:var(--gunmetal);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
+.contact-field input,.contact-field textarea{width:100%;padding:12px 16px;border:1px solid var(--charcoal);background:rgba(5,5,5,0.5);color:var(--frost);font-family:inherit;font-size:13px;outline:none;transition:border-color 0.3s ease;cursor:text}
+.contact-field input:focus,.contact-field textarea:focus{border-color:var(--accent-blue)}
+.contact-field textarea{min-height:100px;resize:vertical}
+.contact-submit{width:100%;padding:14px;border:1px solid var(--accent-blue);background:transparent;color:var(--accent-blue);font-family:inherit;font-size:11px;letter-spacing:3px;text-transform:uppercase;cursor:none;transition:all 0.4s ease;position:relative;overflow:hidden}
+.contact-submit::before{content:'';position:absolute;inset:0;background:var(--accent-blue);transform:translateX(-101%);transition:transform 0.4s ease;z-index:-1}
+.contact-submit:hover{color:var(--void)}.contact-submit:hover::before{transform:translateX(0)}
+.contact-info-panel{max-width:350px}
+.contact-info-panel h3{font-family:'Syne','Inter',sans-serif;font-size:24px;font-weight:700;color:var(--white);margin-bottom:8px}
+.contact-info-panel .subtitle{font-size:11px;color:var(--accent-amber);letter-spacing:3px;text-transform:uppercase;margin-bottom:32px}
+.contact-link{display:flex;align-items:center;gap:16px;padding:16px 0;border-bottom:1px solid var(--charcoal);font-size:13px;color:var(--silver);text-decoration:none;transition:all 0.3s ease;cursor:none}
+.contact-link:hover{color:var(--accent-blue);padding-left:8px}
+.contact-link-icon{width:36px;height:36px;border:1px solid var(--charcoal);display:flex;justify-content:center;align-items:center;font-size:14px;transition:border-color 0.3s ease}
+.contact-link:hover .contact-link-icon{border-color:var(--accent-blue)}

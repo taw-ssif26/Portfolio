@@ -1,0 +1,9 @@
+#room-factory{background:radial-gradient(ellipse at 30% 70%,rgba(57,197,207,0.03) 0%,transparent 60%)}
+.skills-network{position:relative;width:900px;height:600px;margin:auto}
+.skill-node{position:absolute;padding:12px 20px;border:1px solid var(--charcoal);background:rgba(13,17,23,0.8);font-size:11px;letter-spacing:1px;color:var(--silver);cursor:none;transition:all 0.4s ease;white-space:nowrap}
+.skill-node:hover{border-color:var(--accent-blue);color:var(--white);box-shadow:0 0 20px rgba(88,166,255,0.1);z-index:10}
+.skill-node.core{border-color:var(--accent-blue);color:var(--accent-blue);font-weight:600;font-size:13px}
+.skill-connector{position:absolute;height:1px;background:linear-gradient(90deg,var(--charcoal),var(--gunmetal),var(--charcoal));transform-origin:left center;opacity:0.3}
+.skill-connector.active{background:linear-gradient(90deg,var(--accent-blue),var(--accent-cyan));opacity:0.6}
+.skill-node-tooltip{position:absolute;bottom:calc(100% + 12px);left:50%;transform:translateX(-50%);padding:8px 14px;background:var(--charcoal);border:1px solid var(--gunmetal);font-size:10px;color:var(--frost);white-space:nowrap;opacity:0;pointer-events:none;transition:opacity 0.3s ease}
+.skill-node:hover .skill-node-tooltip{opacity:1}

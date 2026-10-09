@@ -1,0 +1,101 @@
+@media(max-width:1200px){
+  .projects-lab-container{padding:0 20px}
+  .project-lab-card{grid-template-columns:220px 1fr}
+  .skills-network{width:700px;height:500px}
+  .workspace-container{flex-direction:column}
+  .contact-center{flex-direction:column}
+  .vault-grid{grid-template-columns:repeat(2,1fr)}
+  .terminal-window{width:95vw}
+}
+@media(max-width:768px){
+  body{cursor:auto}
+  #cursor-core, #cursor-ring{display:none}
+  .hud-brand{font-size:9px;letter-spacing:2px}
+  .hud-coords{display:none}
+  .hud-nav-hint{display:none}
+  .hud-system{gap:10px}
+  .live-dashboard{top:60px;right:10px;width:160px;padding:10px}
+  .dashboard-title{font-size:8px}
+  .dashboard-metric{font-size:8px;padding:3px 0}
+  #nav-dock{bottom:12px;padding:5px 8px;gap:2px}
+  .nav-item{padding:6px 10px;font-size:8px;letter-spacing:1px}
+  .entrance-gate{width:92vw;min-height:300px;padding:24px;gap:20px}
+  .gate-title{font-size:22px;letter-spacing:4px}
+  .gate-subtitle{font-size:9px;letter-spacing:3px}
+  .gate-enter-btn{padding:12px 28px;font-size:9px}
+  .core-orb-container{width:200px;height:200px}
+  .core-orb{width:80px;height:80px}
+  .core-name{font-size:18px;letter-spacing:2px}
+  .core-role{font-size:9px}
+  .core-stats{gap:24px;margin-top:24px}
+  .core-stat-value{font-size:16px}
+  .core-stat-label{font-size:8px}
+  .projects-lab-container{margin-top:60px;padding:0 14px;gap:14px}
+  .project-lab-card{grid-template-columns:1fr;min-height:auto}
+  .project-lab-visual{padding:16px;border-right:none;border-bottom:1px solid var(--charcoal);min-height:120px}
+  .project-lab-icon{width:48px;height:48px;font-size:22px}
+  .project-lab-content{padding:18px 20px}
+  .project-lab-title{font-size:16px}
+  .project-lab-desc{font-size:11px}
+  .project-lab-metrics{gap:16px;margin-bottom:12px}
+  .project-lab-metric{font-size:9px}
+  .project-lab-actions{position:relative;top:auto;right:auto;opacity:1;transform:none;margin-top:12px;display:flex;gap:8px}
+  .project-lab-btn{padding:8px 16px;font-size:10px}
+  .project-lab-card.expanded{grid-template-columns:1fr}
+  .project-lab-card.expanded .project-lab-terminal{height:auto;padding:12px 20px}
+  .skills-network{width:100%;height:400px;padding:0 16px}
+  .skill-node{padding:8px 12px;font-size:9px}
+  .skill-node.core{font-size:11px}
+  .workspace-desk{width:90vw;height:260px}
+  .item-monitor{width:130px;height:80px;top:20px;left:110px}
+  .item-laptop{width:70px;height:50px;top:35px;left:20px}
+  .item-keyboard{width:100px;height:22px;bottom:60px;left:125px}
+  .item-mug{width:22px;height:28px;bottom:65px;right:55px}
+  .item-notebook{width:45px;height:35px;bottom:50px;left:25px}
+  .item-plant{width:25px;height:38px;top:15px;right:20px}
+  .item-photo{width:30px;height:38px;bottom:50px;right:20px}
+  .workspace-info h2{font-size:22px}
+  .workspace-info .role{font-size:10px}
+  .workspace-info p{font-size:11px}
+  .workspace-portrait{width:90px;height:110px}
+  .terminal-window{width:95vw;min-height:70vh}
+  .terminal-body{font-size:11px;padding:14px}
+  .terminal-input{font-size:11px}
+  .terminal-hint{font-size:9px}
+  .contact-center{gap:30px;padding:0 16px}
+  .contact-console{width:92vw;padding:24px}
+  .contact-console h3{font-size:14px}
+  .contact-field input,.contact-field textarea{padding:10px 12px;font-size:12px}
+  .contact-submit{padding:12px;font-size:10px}
+  .contact-info-panel h3{font-size:18px}
+  .contact-info-panel .subtitle{font-size:10px}
+  .contact-link{padding:12px 0;font-size:11px;gap:12px}
+  .contact-link-icon{width:30px;height:30px;font-size:12px}
+  .vault-grid{grid-template-columns:repeat(2,1fr);gap:12px;max-width:92vw}
+  .vault-item{width:auto;height:110px;gap:8px}
+  .vault-icon{font-size:22px}
+  .vault-label{font-size:9px}
+  .vault-value{font-size:16px}
+  .secret-content h2{font-size:28px}
+  .secret-content p{font-size:12px}
+  .secret-logs{padding:16px;font-size:10px}
+  .projects-header{top:40px}
+  .projects-header-title{font-size:11px}
+  .projects-header-sub{font-size:9px}
+}
+
+@media(max-width:480px){
+  .gate-title{font-size:18px}
+  .project-lab-title{font-size:14px}
+  .project-lab-desc{font-size:10px}
+  .vault-grid{grid-template-columns:1fr 1fr}
+  .nav-item{padding:5px 8px;font-size:7px}
+}
+
+@media(hover:none){
+  .project-lab-actions{opacity:1;transform:none;position:relative;top:auto;right:auto;margin-top:12px}
+  .dashboard-close{opacity:1}
+  .project-lab-card:hover{transform:none}
+  .project-lab-card:hover .project-lab-actions{opacity:1;transform:none}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms!important;transition-duration:0.01ms!important}}

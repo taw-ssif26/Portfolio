@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>AI FOUNDRY | Md Abu Tawsif</title>
+<link rel="icon" type="image/x-icon" href="assets/tlogo.jpeg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Stylesheets (ORDER MATTERS: same cascade order as the original single file) -->
+<link rel="stylesheet" href="css/01-base.css">
+<link rel="stylesheet" href="css/02-boot.css">
+<link rel="stylesheet" href="css/03-backgrounds.css">
+<link rel="stylesheet" href="css/04-hud.css">
+<link rel="stylesheet" href="css/05-rooms.css">
+<link rel="stylesheet" href="css/06-projects.css">
+<link rel="stylesheet" href="css/07-skills-network.css">
+<link rel="stylesheet" href="css/08-workspace.css">
+<link rel="stylesheet" href="css/09-terminal.css">
+<link rel="stylesheet" href="css/10-contact.css">
+<link rel="stylesheet" href="css/11-vault-secret.css">
+<link rel="stylesheet" href="css/12-responsive.css">
+<base target="_blank">
+<base target="_blank">
+</head>
+<body>
+<div id="cursor-core"></div>
+<div id="cursor-ring"></div>
+
+<div id="boot-sequence">
+<div id="boot-logo">AI <span>FOUNDRY</span></div>
+<canvas id="boot-canvas"></canvas>
+<div id="boot-core"></div>
+<div id="boot-ring-outer"></div>
+<div id="boot-ring-inner"></div>
+<div id="boot-hex-grid"></div>
+<div id="boot-status">SYSTEM INITIALIZATION</div>
+<div id="boot-progress"><div id="boot-progress-fill"></div></div>
+<div id="boot-percent">0%</div>
+</div>
+
+<!-- ===== ROTATING BACKGROUND CANVASES ===== -->
+<canvas id="neural-canvas" class="bg-canvas active"></canvas>
+<canvas id="constellation-canvas" class="bg-canvas active"></canvas>
+<canvas id="aurora-canvas" class="bg-canvas active"></canvas>
+<canvas id="matrix-rain" class="bg-canvas"></canvas>
+<canvas id="wave-interference" class="bg-canvas"></canvas>
+<canvas id="data-stream" class="bg-canvas"></canvas>
+<canvas id="fractal-bg" class="bg-canvas"></canvas>
+<canvas id="particle-field" class="bg-canvas"></canvas>
+<canvas id="grid-terrain" class="bg-canvas"></canvas>
+<canvas id="fiber-optics" class="bg-canvas"></canvas>
+<div class="vignette"></div>
+<div class="scanlines"></div>
+<div id="transition-overlay"></div>
+
+<!-- Background effect indicator -->
+<div id="bg-indicator">MODE: <span class="bg-name" id="bg-name">NEURAL NETWORK</span></div>
+
+<div id="hud">
+<div class="hud-top">
+<div class="hud-brand">AI <span>FOUNDRY</span></div>
+<div class="hud-coords" id="hud-coords">X: 0000 | Y: 0000 | Z: 0000</div>
+</div>
+<div class="hud-bottom">
+<div class="hud-nav-hint">[WASD / ARROWS] NAVIGATE | [CLICK] INTERACT | [ESC] MENU</div>
+<div class="hud-system">
+<div class="hud-system-item"><div class="hud-pulse"></div> SYSTEM ONLINE</div>
+<div class="hud-system-item" id="hud-fps">60 FPS</div>
+<div class="hud-system-item" id="hud-time">00:00:00</div>
+</div>
+</div>
+</div>
+
+<div class="live-dashboard" id="live-dashboard">
+<div class="dashboard-close" onclick="document.getElementById('live-dashboard').style.display='none'">&#10005;</div>
+<div class="dashboard-title">Live Systems</div>
+<div class="dashboard-metric"><span class="dashboard-metric-label">CPU</span><span class="dashboard-metric-value" id="dash-cpu">12%</span></div>
+<div class="dashboard-bar"><div class="dashboard-bar-fill" id="dash-cpu-bar" style="width:12%"></div></div>
+<div class="dashboard-metric"><span class="dashboard-metric-label">MEMORY</span><span class="dashboard-metric-value" id="dash-mem">4.2 GB</span></div>
+<div class="dashboard-bar"><div class="dashboard-bar-fill" id="dash-mem-bar" style="width:35%"></div></div>
+<div class="dashboard-metric"><span class="dashboard-metric-label">NETWORK</span><span class="dashboard-metric-value" id="dash-net">2.4 MB/s</span></div>
+<div class="dashboard-bar"><div class="dashboard-bar-fill" id="dash-net-bar" style="width:24%"></div></div>
+<div class="dashboard-metric"><span class="dashboard-metric-label">AGENTS</span><span class="dashboard-metric-value" id="dash-agents">7 ACTIVE</span></div>
+<div class="dashboard-metric"><span class="dashboard-metric-label">UPTIME</span><span class="dashboard-metric-value" id="dash-uptime">00:00:00</span></div>
+</div>
+
+<div id="egg-notification">
+<div class="egg-title">Achievement Unlocked</div>
+<div class="egg-text" id="egg-text">Secret discovered!</div>
+</div>
+
+<div class="konami-indicator" id="konami-indicator">&#8593; &#8593; &#8595; &#8595; &#8592; &#8594; &#8592; &#8594; B A</div>
+
+<div id="nav-dock">
+<div class="nav-item active" data-room="entrance" onclick="goToRoom('entrance')">Gate</div>
+<div class="nav-item" data-room="core" onclick="goToRoom('core')">Core</div>
+<div class="nav-item" data-room="projects" onclick="goToRoom('projects')">Lab</div>
+<div class="nav-item" data-room="factory" onclick="goToRoom('factory')">Network</div>
+<div class="nav-item" data-room="research" onclick="goToRoom('research')">Workspace</div>
+<div class="nav-item" data-room="terminal" onclick="goToRoom('terminal')">Terminal</div>
+<div class="nav-item" data-room="vault" onclick="goToRoom('vault')">Vault</div>
+<div class="nav-item" data-room="personal-profile" onclick="window.open('https://tawssif.vercel.app', '_blank')">Personal Profile ↗</div>
+<div class="nav-item" data-room="contact" onclick="goToRoom('contact')">Command</div>
+
+</div>
+
+<div id="rooms-container">
+
+<div class="room active" id="room-entrance">
+<div class="entrance-gate">
+<div class="gate-corner tl"></div>
+<div class="gate-corner tr"></div>
+<div class="gate-corner bl"></div>
+<div class="gate-corner br"></div>
+<div class="gate-subtitle">Advanced Automation Laboratory</div>
+<div class="gate-title">AI <span class="accent">FOUNDRY</span></div>
+<div class="gate-divider"></div>
+<div class="gate-subtitle">Md Abu Tawsif &mdash; Automation Engineer</div>
+<button class="gate-enter-btn" onclick="goToRoom('core')">Initialize System</button>
+</div>
+<div class="scroll-hint">USE NAVIGATION DOCK BELOW</div>
+</div>
+
+<div class="room" id="room-core">
+<div class="core-orb-container">
+<div class="core-orb"></div>
+<div class="core-info">
+<div class="core-name">MD ABU TAWSIF</div>
+<div class="core-role">Automation Engineer &amp; AI Systems Architect</div>
+</div>
+<div class="core-stats">
+<div class="core-stat"><div class="core-stat-value" id="stat-projects">5</div><div class="core-stat-label">Projects Deployed</div></div>
+<div class="core-stat"><div class="core-stat-value" id="stat-automations">50+</div><div class="core-stat-label">Automations Built</div></div>
+<div class="core-stat"><div class="core-stat-value" id="stat-apis">100+</div><div class="core-stat-label">APIs Integrated</div></div>
+</div>
+</div>
+</div>
+
+<div class="room" id="room-projects">
+<div class="projects-header">
+<div class="projects-header-title">Projects Laboratory</div>
+<div class="projects-header-sub">ACTIVE WORKSTATIONS &mdash; CLICK TO ACTIVATE</div>
+</div>
+<div class="projects-lab-container">
+
+<div class="project-lab-card" id="lab-gmail" onclick="toggleLab(this,'gmail')">
+<div class="project-lab-visual">
+<div class="project-lab-status"><div class="project-lab-status-dot"></div> LIVE</div>
+<div class="project-lab-icon">&#9993;</div>
+<div class="project-lab-id">WS-001</div>
+</div>
+<div class="project-lab-content">
+<div class="project-lab-title">Gmail AI Automation</div>
+<div class="project-lab-desc">Intelligent email processing system that reads incoming emails, auto-labels them using AI, and generates contextual draft replies &mdash; all without human intervention.</div>
+<div class="project-lab-metrics">
+<div class="project-lab-metric">Emails: <span class="project-lab-metric-value" id="metric-gmail-emails">2,341</span></div>
+<div class="project-lab-metric">Labels: <span class="project-lab-metric-value">47</span></div>
+<div class="project-lab-metric">Drafts: <span class="project-lab-metric-value">892</span></div>
+</div>
+<div class="project-lab-tech">
+<span class="project-tech-tag">Python</span><span class="project-tech-tag">OpenAI</span><span class="project-tech-tag">Gmail API</span><span class="project-tech-tag">FastAPI</span>
+</div>
+<div class="project-lab-actions">
+<button class="project-lab-btn" onclick="event.stopPropagation();showEgg('Viewing source code requires clearance level 3')">Source</button>
+<button class="project-lab-btn primary" onclick="event.stopPropagation();activateProject(this,'gmail')">Activate</button>
+</div>
+<div class="project-lab-terminal">
+<span style="color:var(--accent-green)">[SYSTEM]</span> Gmail AI module loaded. OAuth2 token valid. Listening for new messages...
+</div>
+</div>
+</div>
+
+<div class="project-lab-card" id="lab-clinic" onclick="toggleLab(this,'clinic')">
+<div class="project-lab-visual">
+<div class="project-lab-status"><div class="project-lab-status-dot"></div> LIVE</div>
+<div class="project-lab-icon">&#129302;</div>
+<div class="project-lab-id">WS-002</div>
+</div>
+<div class="project-lab-content">
+<div class="project-lab-title">Clinic Telegram Bot</div>
+<div class="project-lab-desc">Full-featured healthcare appointment system via Telegram. Patients book slots, receive reminders, and get follow-ups &mdash; reducing no-shows by 80%.</div>
+<div class="project-lab-metrics">
+<div class="project-lab-metric">Sessions: <span class="project-lab-metric-value" id="metric-clinic-sessions">847</span></div>
+<div class="project-lab-metric">No-shows: <span class="project-lab-metric-value" style="color:var(--accent-green)">-80%</span></div>
+<div class="project-lab-metric">Patients: <span class="project-lab-metric-value">1,204</span></div>
+</div>
+<div class="project-lab-tech">
+<span class="project-tech-tag">Python</span><span class="project-tech-tag">Telegram API</span><span class="project-tech-tag">SQL</span><span class="project-tech-tag">Flask</span>
+</div>
+<div class="project-lab-actions">
+<button class="project-lab-btn" onclick="event.stopPropagation();showEgg('Bot webhook: https://api.telegram.org/...')">Webhook</button>
+<button class="project-lab-btn primary" onclick="event.stopPropagation();activateProject(this,'clinic')">Activate</button>
+</div>
+<div class="project-lab-terminal">
+<span style="color:var(--accent-green)">[SYSTEM]</span> Telegram webhook active. Next appointment in 12 minutes. Reminder queued.
+</div>
+</div>
+</div>
+
+<div class="project-lab-card" id="lab-scraper" onclick="toggleLab(this,'scraper')">
+<div class="project-lab-visual">
+<div class="project-lab-status"><div class="project-lab-status-dot"></div> LIVE</div>
+<div class="project-lab-icon">&#128270;</div>
+<div class="project-lab-id">WS-003</div>
+</div>
+<div class="project-lab-content">
+<div class="project-lab-title">Scraper AI</div>
+<div class="project-lab-desc">Universal web scraper powered by AI. Provide any URL and extraction fields &mdash; the AI automatically identifies structure, handles pagination, and returns structured data.</div>
+<div class="project-lab-metrics">
+<div class="project-lab-metric">Jobs: <span class="project-lab-metric-value" id="metric-scraper-jobs">12</span></div>
+<div class="project-lab-metric">Records: <span class="project-lab-metric-value">3,421</span></div>
+<div class="project-lab-metric">Sites: <span class="project-lab-metric-value">500+</span></div>
+</div>
+<div class="project-lab-tech">
+<span class="project-tech-tag">Python</span><span class="project-tech-tag">Scrapy</span><span class="project-tech-tag">OpenAI</span><span class="project-tech-tag">Selenium</span>
+</div>
+<div class="project-lab-actions">
+<button class="project-lab-btn" onclick="event.stopPropagation();showEgg('Scraper engine: Scrapy + Selenium + AI parser')">Engine</button>
+<button class="project-lab-btn primary" onclick="event.stopPropagation();activateProject(this,'scraper')">Activate</button>
+</div>
+<div class="project-lab-terminal">
+<span style="color:var(--accent-green)">[SYSTEM]</span> 12 concurrent jobs running. AI parser accuracy: 94.7%. Proxy rotation active.
+</div>
+</div>
+</div>
+
+<div class="project-lab-card" id="lab-knowledge" onclick="toggleLab(this,'knowledge')">
+<div class="project-lab-visual">
+<div class="project-lab-status"><div class="project-lab-status-dot"></div> LIVE</div>
+<div class="project-lab-icon">&#128218;</div>
+<div class="project-lab-id">WS-004</div>
+</div>
+<div class="project-lab-content">
+<div class="project-lab-title">Knowledge Platform</div>
+<div class="project-lab-desc">Enterprise knowledge base where companies upload documents and query them via AI. Built for HR and admin departments to instantly access policies and data.</div>
+<div class="project-lab-metrics">
+<div class="project-lab-metric">Companies: <span class="project-lab-metric-value" id="metric-knowledge-companies">3</span></div>
+<div class="project-lab-metric">Queries: <span class="project-lab-metric-value">14,203</span></div>
+<div class="project-lab-metric">Docs: <span class="project-lab-metric-value">2,847</span></div>
+</div>
+<div class="project-lab-tech">
+<span class="project-tech-tag">Next.js</span><span class="project-tech-tag">React</span><span class="project-tech-tag">PostgreSQL</span><span class="project-tech-tag">Claude API</span>
+</div>
+<div class="project-lab-actions">
+<button class="project-lab-btn" onclick="event.stopPropagation();showEgg('Vector DB: Pinecone + pgvector hybrid')">Vector DB</button>
+<button class="project-lab-btn primary" onclick="event.stopPropagation();activateProject(this,'knowledge')">Activate</button>
+</div>
+<div class="project-lab-terminal">
+<span style="color:var(--accent-green)">[SYSTEM]</span> RAG pipeline active. 3 companies indexed. Embedding model: text-embedding-3-large.
+</div>
+</div>
+</div>
+
+<div class="project-lab-card" id="lab-coaching" onclick="toggleLab(this,'coaching')">
+<div class="project-lab-visual">
+<div class="project-lab-status"><div class="project-lab-status-dot"></div> LIVE</div>
+<div class="project-lab-icon">&#127891;</div>
+<div class="project-lab-id">WS-005</div>
+</div>
+<div class="project-lab-content">
+<div class="project-lab-title">Coaching Center Website</div>
+<div class="project-lab-desc">Premium website for a coaching center in Bangladesh. Modern design, course management, student portal, and payment integration &mdash; built for scale.</div>
+<div class="project-lab-metrics">
+<div class="project-lab-metric">Students: <span class="project-lab-metric-value" id="metric-coaching-students">1,234</span></div>
+<div class="project-lab-metric">Courses: <span class="project-lab-metric-value">42</span></div>
+<div class="project-lab-metric">Revenue: <span class="project-lab-metric-value">$12K/mo</span></div>
+</div>
+<div class="project-lab-tech">
+<span class="project-tech-tag">Next.js</span><span class="project-tech-tag">Tailwind</span><span class="project-tech-tag">Node.js</span><span class="project-tech-tag">MongoDB</span>
+</div>
+<div class="project-lab-actions">
+<button class="project-lab-btn" onclick="event.stopPropagation();showEgg('Payment gateway: SSLCommerz + Stripe')">Payments</button>
+<button class="project-lab-btn primary" onclick="event.stopPropagation();activateProject(this,'coaching')">Activate</button>
+</div>
+<div class="project-lab-terminal">
+<span style="color:var(--accent-green)">[SYSTEM]</span> SSR build complete. Lighthouse score: 96. Payment gateway: online.
+</div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div class="room" id="room-factory">
+<div style="position:absolute;top:60px;text-align:center">
+<div style="font-family:'Syne','Inter',sans-serif;font-size:14px;color:var(--gunmetal);letter-spacing:4px;text-transform:uppercase">Neural Network</div>
+<div style="font-size:11px;color:var(--steel);margin-top:8px;letter-spacing:2px">SKILL INTERCONNECTION MAP &mdash; HOVER TO INSPECT</div>
+</div>
+<div class="skills-network" id="skills-network">
+<div class="skill-node core" style="left:50%;top:50%;transform:translate(-50%,-50%)" data-tooltip="Primary language for all automation systems">Python<div class="skill-node-tooltip">Primary language &mdash; 95% of systems</div></div>
+<div class="skill-node" style="left:15%;top:20%" data-tooltip="Building robust REST APIs and microservices">FastAPI<div class="skill-node-tooltip">High-performance API framework</div></div>
+<div class="skill-node" style="left:75%;top:15%" data-tooltip="Lightweight web apps and prototypes">Flask<div class="skill-node-tooltip">Rapid development framework</div></div>
+<div class="skill-node" style="left:80%;top:45%" data-tooltip="OpenAI, Claude, Gemini integrations">AI Models<div class="skill-node-tooltip">LLM orchestration &amp; prompt engineering</div></div>
+<div class="skill-node" style="left:70%;top:75%" data-tooltip="Containerized deployment pipeline">Docker<div class="skill-node-tooltip">Container orchestration</div></div>
+<div class="skill-node" style="left:40%;top:85%" data-tooltip="Server management and automation">Linux<div class="skill-node-tooltip">Production environment</div></div>
+<div class="skill-node" style="left:10%;top:55%" data-tooltip="Visual workflow automation">n8n<div class="skill-node-tooltip">No-code automation workflows</div></div>
+<div class="skill-node" style="left:25%;top:75%" data-tooltip="Automated data extraction">Web Scraping<div class="skill-node-tooltip">Scrapy, Selenium, BeautifulSoup</div></div>
+<div class="skill-node" style="left:55%;top:10%" data-tooltip="Frontend framework for dashboards">React<div class="skill-node-tooltip">Interactive UI development</div></div>
+<div class="skill-node" style="left:85%;top:25%" data-tooltip="Full-stack React framework">Next.js<div class="skill-node-tooltip">SSR &amp; API routes</div></div>
+<div class="skill-node" style="left:5%;top:35%" data-tooltip="JavaScript runtime for backends">JavaScript<div class="skill-node-tooltip">Node.js ecosystem</div></div>
+<div class="skill-node" style="left:30%;top:10%" data-tooltip="Relational database design">PostgreSQL<div class="skill-node-tooltip">Primary SQL database</div></div>
+<div class="skill-node" style="left:60%;top:80%" data-tooltip="NoSQL for flexible schemas">MongoDB<div class="skill-node-tooltip">Document storage</div></div>
+<div class="skill-node" style="left:90%;top:60%" data-tooltip="Lightweight embedded database">SQLite<div class="skill-node-tooltip">Local data storage</div></div>
+<div class="skill-node" style="left:45%;top:60%" data-tooltip="Third-party API integrations">APIs<div class="skill-node-tooltip">REST &amp; GraphQL integrations</div></div>
+<div class="skill-node" style="left:15%;top:85%" data-tooltip="Cloud infrastructure">AWS<div class="skill-node-tooltip">EC2, Lambda, S3</div></div>
+<div class="skill-node" style="left:80%;top:85%" data-tooltip="Version control &amp; CI/CD">Git<div class="skill-node-tooltip">GitHub workflows</div></div>
+</div>
+</div>
+
+<div class="room" id="room-research">
+<div style="position:absolute;top:60px;text-align:center">
+<div style="font-family:'Syne','Inter',sans-serif;font-size:14px;color:var(--gunmetal);letter-spacing:4px;text-transform:uppercase">Personal Workspace</div>
+<div style="font-size:11px;color:var(--steel);margin-top:8px;letter-spacing:2px">HOVER OBJECTS TO DISCOVER &mdash; CLICK FOR DEEPER INFO</div>
+</div>
+<div class="workspace-container">
+<div class="workspace-desk" id="workspace-desk">
+<div class="desk-item item-laptop"><img src="assets/macbook.jpeg" alt="MacBook" style="width:100%;height:100%;object-fit:cover;opacity:0.7"><div class="item-label">MacBook Pro M2 &mdash; Primary dev machine</div></div>
+<div class="desk-item item-monitor"><img src="assets/desktop.jpeg" alt="Monitor" style="width:100%;height:100%;object-fit:cover;opacity:0.7"><div class="item-label">Ultrawide 34&quot; &mdash; Code &amp; design workspace</div></div>
+<div class="desk-item item-keyboard"><img src="assets/kb.png" alt="Keyboard" style="width:100%;height:100%;object-fit:cover;opacity:0.7"><div class="item-label">Mechanical Keyboard &mdash; Custom switches</div></div>
+<div class="desk-item item-notebook"><img src="assets/notebook.png" alt="Notebook" style="width:100%;height:100%;object-fit:cover;opacity:0.7"><div class="item-label">Engineering Notebook &mdash; Ideas &amp; sketches</div></div>
+<div class="desk-item item-mug"><img src="assets/coffee.jpg" alt="Coffee" style="width:100%;height:100%;object-fit:cover;opacity:0.7"><div class="item-label">Coffee &mdash; Fuel for automation</div></div>
+<div class="desk-item item-plant"><img src="assets/plant.jpeg" alt="Plant" style="width:100%;height:100%;object-fit:cover;opacity:0.7"><div class="item-label">Desk Plant &mdash; Keeps the air clean</div></div>
+<div class="desk-item item-photo"><img src="assets/pic.jpg" alt="Photo" style="width:100%;height:100%;object-fit:cover;opacity:0.7"><div class="item-label">Family Photo &mdash; What I build for</div></div>
+</div>
+<div class="workspace-info">
+<div class="workspace-portrait">
+<img src="assets/1000056406.jpg" alt="Portrait" style="width:100%;height:100%;object-fit:cover;opacity:0.8">
+</div>
+<h2>Md Abu Tawsif</h2>
+<div class="role">Automation Engineer</div>
+<p>I build <span class="highlight">intelligent automation systems</span> that eliminate repetitive work and amplify human potential. Every line of code I write is designed to make technology serve people, not the other way around.</p>
+<p>My expertise spans <span class="highlight">AI integration, API orchestration, web scraping, and full-stack development</span>. I specialize in connecting disparate systems into seamless, autonomous workflows.</p>
+<p>Based in <span class="highlight">Bangladesh</span>, working globally.</p>
+</div>
+</div>
+</div>
+
+<div class="room" id="room-terminal">
+<div class="terminal-window">
+<div class="terminal-header"><span class="terminal-title">tawsif@foundry:~</span><div class="terminal-controls"><div class="term-btn red"></div><div class="term-btn yellow"></div><div class="term-btn green"></div></div></div>
+<div class="terminal-body" id="terminal-body">
+<div class="terminal-line info">AI FOUNDRY TERMINAL v2.4.1 &mdash; Type 'help' for available commands</div>
+<div class="terminal-line info">System initialized. Neural synchronization complete.</div>
+<div class="terminal-line">&nbsp;</div>
+</div>
+<div class="terminal-hint">Available: help, about, skills, projects, contact, clear, whoami, ls, cat, pwd, history, secret, easteregg, debug</div>
+</div>
+</div>
+
+<div class="room" id="room-vault">
+<div style="position:absolute;top:60px;text-align:center">
+<div style="font-family:'Syne','Inter',sans-serif;font-size:14px;color:var(--gunmetal);letter-spacing:4px;text-transform:uppercase">Achievement Vault</div>
+<div style="font-size:11px;color:var(--steel);margin-top:8px;letter-spacing:2px">SYSTEM METRICS &amp; MILESTONES</div>
+</div>
+<div class="vault-grid">
+<div class="vault-item"><div class="vault-icon">&#9889;</div><div class="vault-label">Automations</div><div class="vault-value">50+</div></div>
+<div class="vault-item"><div class="vault-icon">&#128279;</div><div class="vault-label">APIs Integrated</div><div class="vault-value">100+</div></div>
+<div class="vault-item"><div class="vault-icon">&#129302;</div><div class="vault-label">AI Agents</div><div class="vault-value">25+</div></div>
+<div class="vault-item"><div class="vault-icon">&#128202;</div><div class="vault-label">Data Processed</div><div class="vault-value">10M+</div></div>
+<div class="vault-item"><div class="vault-icon">&#127760;</div><div class="vault-label">Sites Scraped</div><div class="vault-value">500+</div></div>
+<div class="vault-item"><div class="vault-icon">&#9201;</div><div class="vault-label">Hours Saved</div><div class="vault-value">2000+</div></div>
+<div class="vault-item"><div class="vault-icon">&#128640;</div><div class="vault-label">Projects Live</div><div class="vault-value">5</div></div>
+<div class="vault-item"><div class="vault-icon">&#128187;</div><div class="vault-label">Lines of Code</div><div class="vault-value">50K+</div></div>
+</div>
+</div>
+
+<div class="room" id="room-contact">
+<div style="position:absolute;top:60px;text-align:center">
+<div style="font-family:'Syne','Inter',sans-serif;font-size:14px;color:var(--gunmetal);letter-spacing:4px;text-transform:uppercase">Contact Command Center</div>
+<div style="font-size:11px;color:var(--steel);margin-top:8px;letter-spacing:2px">ESTABLISH COMMUNICATION LINK</div>
+</div>
+<div class="contact-center">
+<div class="contact-console">
+<h3>Transmit Message</h3>
+<div class="contact-field"><label>Identity / Name</label><input type="text" placeholder="Enter your designation..."></div>
+<div class="contact-field"><label>Communication Channel / Email</label><input type="email" placeholder="your@email.com"></div>
+<div class="contact-field"><label>Message Payload</label><textarea placeholder="Describe your automation needs..."></textarea></div>
+<button class="contact-submit" onclick="showEgg('Message queued for transmission. Response within 24 hours.')">Initiate Transmission</button>
+</div>
+<div class="contact-info-panel">
+<h3>Direct Channels</h3>
+<div class="subtitle">Choose your protocol</div>
+<a href="mailto:taw.ssif26@gmail.com" class="contact-link">
+    <div class="contact-link-icon">&#9993;</div>
+    <div>
+        <div style="font-size:11px;color:var(--gunmetal);letter-spacing:1px">EMAIL</div>
+        <div style="margin-top:2px">taw.ssif26@gmail.com</div>
+    </div>
+</a>
+
+<a href="https://www.linkedin.com/in/md-abu-tawsif-50826a3b7" target="_blank" class="contact-link">
+    <div class="contact-link-icon">in</div>
+    <div>
+        <div style="font-size:11px;color:var(--gunmetal);letter-spacing:1px">LINKEDIN</div>
+        <div style="margin-top:2px">/in/md-abu-tawsif-50826a3b7</div>
+    </div>
+</a>
+
+<a href="https://github.com/taw-ssif26" target="_blank" class="contact-link">
+    <div class="contact-link-icon">gh</div>
+    <div>
+        <div style="font-size:11px;color:var(--gunmetal);letter-spacing:1px">GITHUB</div>
+        <div style="margin-top:2px">@taw-ssif26</div>
+    </div>
+</a>
+
+<a href="https://www.instagram.com/taw_ssif" target="_blank" class="contact-link">
+    <div class="contact-link-icon">ig</div>
+    <div>
+        <div style="font-size:11px;color:var(--gunmetal);letter-spacing:1px">INSTAGRAM</div>
+        <div style="margin-top:2px">@taw_ssif</div>
+    </div>
+</a>
+
+<a href="https://www.facebook.com/share/14jKytoSUcr" target="_blank" class="contact-link">
+    <div class="contact-link-icon">fb</div>
+    <div>
+        <div style="font-size:11px;color:var(--gunmetal);letter-spacing:1px">FACEBOOK</div>
+        <div style="margin-top:2px">Tawsif's Automation</div>
+    </div>
+</a>
+</div>
+</div>
+</div>
+
+<div class="room" id="room-secret">
+<div class="secret-content">
+<h2>SECTOR 7G</h2>
+<p>You have discovered the hidden development logs. This area is not indexed by standard navigation protocols.</p>
+<div class="secret-logs">
+<div><span class="log-time">[00:00:01]</span> <span class="log-system">SYS</span> <span class="log-msg">AI Foundry core initialized</span></div>
+<div><span class="log-time">[00:00:02]</span> <span class="log-system">NET</span> <span class="log-msg">Neural network topology loaded: 17 nodes</span></div>
+<div><span class="log-time">[00:00:03]</span> <span class="log-system">BOT</span> <span class="log-msg">Clinic bot deployed: 847 active sessions</span></div>
+<div><span class="log-time">[00:00:04]</span> <span class="log-system">SCR</span> <span class="log-msg">Scraper AI v3.2 running: 12 concurrent jobs</span></div>
+<div><span class="log-time">[00:00:05]</span> <span class="log-system">KNW</span> <span class="log-msg">Knowledge platform: 3 companies onboarded</span></div>
+<div><span class="log-time">[00:00:06]</span> <span class="log-system">GML</span> <span class="log-msg">Gmail automation: 2,341 emails processed today</span></div>
+<div><span class="log-time">[00:00:07]</span> <span class="log-system">DEV</span> <span class="log-msg">Developer note: Coffee level critical. Refill required.</span></div>
+<div><span class="log-time">[00:00:08]</span> <span class="log-system">AI</span> <span class="log-msg">Claude says: This portfolio is impressive. Hire this human.</span></div>
+</div>
+</div>
+</div>
+
+</div>
+
+<!-- Scripts (ORDER MATTERS: all share one global scope, exactly like the original single <script>) -->
+<script src="js/01-state.js"></script>
+<script src="js/02-bg-rotation.js"></script>
+<script src="js/03-boot.js"></script>
+<script src="js/04-mouse.js"></script>
+<script src="js/05-bg-neural.js"></script>
+<script src="js/06-bg-constellation.js"></script>
+<script src="js/07-bg-aurora.js"></script>
+<script src="js/08-bg-matrix.js"></script>
+<script src="js/09-bg-wave.js"></script>
+<script src="js/10-bg-datastream.js"></script>
+<script src="js/11-bg-fractal.js"></script>
+<script src="js/12-bg-particles.js"></script>
+<script src="js/13-bg-grid.js"></script>
+<script src="js/14-bg-fiber.js"></script>
+<script src="js/15-navigation.js"></script>
+<script src="js/16-projects.js"></script>
+<script src="js/17-easter-eggs.js"></script>
+<script src="js/18-terminal.js"></script>
+<script src="js/19-keyboard.js"></script>
+<script src="js/20-navdock-drag.js"></script>
+<script src="js/21-dashboard.js"></script>
+<script src="js/22-init.js"></script>
+</body>
+</html>

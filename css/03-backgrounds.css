@@ -1,0 +1,9 @@
+/* ===== ROTATING BACKGROUND CANVASES ===== */
+.bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0;transition:opacity 3s ease}
+.bg-canvas.active{opacity:1}
+#neural-canvas{opacity:1}
+#constellation-canvas{opacity:0.6}
+#aurora-canvas{opacity:0.3}
+
+#transition-overlay{position:fixed;inset:0;background:var(--void);z-index:50;pointer-events:none;opacity:0;transition:opacity 0.6s ease}
+#transition-overlay.active{opacity:1}
