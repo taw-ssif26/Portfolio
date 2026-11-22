@@ -5,6 +5,7 @@ import Cursor from "./Cursor";
 import FieldCanvas from "./FieldCanvas";
 import Hud from "./Hud";
 import Fx from "./Fx";
+import Nav from "./Nav";
 
 // All ambient chrome lives here so the admin stays plain and fast.
 export default function Stage() {
@@ -12,7 +13,7 @@ export default function Stage() {
   if (path.startsWith("/admin")) return null;
   return (
     <>
-      <Boot /><Cursor /><FieldCanvas /><Hud /><Fx />
+      <Boot /><Cursor /><div className="aurora" aria-hidden><i /><i /><i /></div><FieldCanvas /><Nav /><Hud /><Fx />
       <div className="fxl" aria-hidden>
         <i className="c tl" /><i className="c tr" /><i className="c bl" /><i className="c br" />
         <span className="rec mono">Rec</span><div className="ruler" />

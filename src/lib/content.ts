@@ -50,3 +50,8 @@ export const getSocial = unstable_cache(
 // settings value with fallback
 export const setting = <T,>(all: Record<string, any>, key: string, fallback: T): T =>
   all[key] ?? fallback;
+
+export const getExperience = unstable_cache(
+  async () => db.select().from(s.experience).orderBy(asc(s.experience.sortOrder)),
+  ["experience"], { tags: ["experience"] },
+);

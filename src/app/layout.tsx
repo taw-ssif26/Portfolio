@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
-import { Sora, IBM_Plex_Mono } from "next/font/google";
+import { Geist_Mono } from "next/font/google";
 import { getSettings } from "@/lib/content";
 import Stage from "@/components/Stage";
 import "./globals.css";
 
-const sans = Sora({ subsets: ["latin"], variable: "--font-sans", display: "swap" });
-const mono = IBM_Plex_Mono({ subsets: ["latin"], weight: ["300", "400", "500"], variable: "--font-mono", display: "swap" });
+// Clash Display (headlines) + Satoshi (text) come from Fontshare, free for commercial use.
+// Geist Mono (labels, readouts) is self-hosted by next/font.
+const mono = Geist_Mono({ subsets: ["latin"], variable: "--font-mono", display: "swap" });
+const FONTS = "https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=satoshi@300,400,500,700&display=swap";
 
 export async function generateMetadata(): Promise<Metadata> {
   const s = await getSettings().catch(() => ({} as Record<string, any>));
@@ -19,8 +21,13 @@ const themeInit = `try{var d=document.documentElement,t=localStorage.getItem('th
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${sans.variable} ${mono.variable}`}>
-      <head><script dangerouslySetInnerHTML={{ __html: themeInit }} /></head>
+    <html lang="en" suppressHydrationWarning className={mono.variable}>
+      <head>
+        <link rel="preconnect" href="https://api.fontshare.com" crossOrigin="" />
+        <link rel="preconnect" href="https://cdn.fontshare.com" crossOrigin="" />
+        <link rel="stylesheet" href={FONTS} />
+        <script dangerouslySetInnerHTML={{ __html: themeInit }} />
+      </head>
       <body><Stage />{children}</body>
     </html>
   );

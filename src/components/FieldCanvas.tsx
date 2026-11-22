@@ -58,6 +58,7 @@ export default function FieldCanvas() {
     let attrEl: Element | null = null;
     let raf = 0, last = 0, lastHud = 0;
     let field = false, dim = "#888", acc = "#fff", acc2 = "#0ff", fg = "#fff";
+    let cols = ["#fff", "#fff", "#fff"];
     let hero: HTMLElement | null = null;
     // field-mode state
     let cam = 0, drift = 0, vel = 0, warp = 0, energy = 0, lx = 0, ly = 0, focal = 800, cx = 0, cy = 0, camX = 0, camY = 0;
@@ -68,6 +69,7 @@ export default function FieldCanvas() {
       acc = s.getPropertyValue("--accent").trim() || "#fff";
       acc2 = s.getPropertyValue("--accent2").trim() || acc;
       fg = s.getPropertyValue("--fg").trim() || "#fff";
+      cols = ["--c1", "--c2", "--c3"].map((v) => s.getPropertyValue(v).trim() || acc);
       const was = field;
       field = root.dataset.theme === "field";
       if (field && !was) warp = 1; // walk-in burst
@@ -86,7 +88,8 @@ export default function FieldCanvas() {
       mx += (tx - mx) * 0.16; my += (ty - my) * 0.16;
       ctx.clearRect(0, 0, w, h);
       const sy = scrollY * 0.001, R = 190, R2 = R * R;
-      const pd = new Path2D(), pa = new Path2D();
+      const pd = new Path2D(), pa = [new Path2D(), new Path2D(), new Path2D()];
+      let n = 0;
       for (const p of pts) {
         const wave = Math.sin(p.x * 0.007 + t * 0.0004 + sy * 6) + Math.cos(p.y * 0.008 - t * 0.0003 - sy * 4);
         const dx = p.x - mx, dy = p.y - my, d2 = dx * dx + dy * dy;
@@ -94,10 +97,10 @@ export default function FieldCanvas() {
         if (d2 < R2) f = (1 - d / R) ** 2;
         const ox = (dx / d) * f * 34 + Math.cos(wave) * 1.5, oy = (dy / d) * f * 34 + Math.sin(wave) * 1.5;
         const s = 1.5 + f * 2.2;
-        (f > 0.14 ? pa : pd).rect(p.x + ox - s / 2, p.y + oy - s / 2, s, s);
+        (f > 0.1 ? pa[n++ % 3] : pd).rect(p.x + ox - s / 2, p.y + oy - s / 2, s, s);
       }
       ctx.fillStyle = dim; ctx.fill(pd);
-      ctx.fillStyle = acc; ctx.fill(pa);
+      for (let i = 0; i < 3; i++) { ctx.fillStyle = cols[i]; ctx.fill(pa[i]); }
     };
 
     /* ---------- laboratory corridor (field) ---------- */
@@ -294,13 +297,13 @@ export default function FieldCanvas() {
       if (el) { el.style.setProperty("--mx", String((tx / w - 0.5) * 2)); el.style.setProperty("--my", String((ty / h - 0.5) * 2)); }
       const xy = document.getElementById("hud-xy");
       if (xy) xy.textContent = `X ${pad(tx)}  Y ${pad(ty)}`;
-      const row = (e.target as Element).closest?.(".sys") as HTMLElement | null;
+      const row = (e.target as Element).closest?.(".tile") as HTMLElement | null;
       if (row) {
         const r = row.getBoundingClientRect();
         row.style.setProperty("--px", e.clientX - r.left + "px"); row.style.setProperty("--py", e.clientY - r.top + "px");
       }
     };
-    const onOver = (e: PointerEvent) => { attrEl = (e.target as Element).closest?.(".sys") ?? null; };
+    const onOver = (e: PointerEvent) => { attrEl = (e.target as Element).closest?.(".tile") ?? null; };
     const onScroll = () => { heroEl()?.style.setProperty("--sy", String(Math.min(1, scrollY / innerHeight))); };
     const onVis = () => (document.hidden ? stop() : start());
 

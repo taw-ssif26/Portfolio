@@ -20,7 +20,7 @@ export default function Cursor() {
     const over = (e: PointerEvent) => {
       const t = (e.target as Element).closest?.("a,button,input,textarea,select,summary") as HTMLElement | null;
       const c = el.current!; c.classList.toggle("frame", !!t);
-      const text = !t ? "" : t.classList.contains("sys") ? "INSPECT"
+      const text = !t ? "" : t.classList.contains("tile") ? "INSPECT"
         : t instanceof HTMLAnchorElement && t.target === "_blank" ? "OPEN" : "";
       if (label.current) label.current.textContent = text;
       c.classList.toggle("wide", !!text);

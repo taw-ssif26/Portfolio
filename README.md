@@ -2,7 +2,7 @@
 
 A CMS-driven personal portfolio built like a research-facility interface: boot sequence, targeting cursor, day/night environments, a project observatory and per-project "expedition" pages. All content is edited from a built-in admin dashboard. No code changes are needed for content updates.
 
-**Stack:** Sora + IBM Plex Mono · Next.js 15 (App Router) · React 19 · TypeScript · Drizzle ORM · Neon Postgres · Vercel Blob · Brevo · Zod · jose (JWT) · argon2
+**Stack:** Clash Display + Satoshi (Fontshare) + Geist Mono · Next.js 15 (App Router) · React 19 · TypeScript · Drizzle ORM · Neon Postgres · Vercel Blob · Brevo · Zod · jose (JWT) · argon2
 
 **Running cost:** $0 on free tiers.
 
@@ -28,18 +28,14 @@ A CMS-driven personal portfolio built like a research-facility interface: boot s
 
 ## Features
 
-**Public site**
-- Cinematic boot sequence (once per session, skippable, disabled for reduced-motion)
-- Three environments, switched from the nav: **Day** (clinical), **Night** (deep space), **Field** (experimental). CSS variables, no flash on load, choice remembered
-- Control-panel navigation instead of a navbar
-- Hero with an animated data → intelligence → automation → execution instrument
-- Project observatory, plus an expedition page per project (Problem, System, Architecture, Implementation, Result, Live system)
-- Animated architecture flow rendered from data
-- Lab section, About with grouped skills, and a contact form with an animated INPUT → ENCRYPT → TRANSMIT → RECEIVED pipeline
-- **Field mode:** a pseudo-3D laboratory corridor on one canvas. Scrolling walks you down it, the cursor turns your head, hovering a project energises the lab and locks a targeting frame onto it. Ceiling lights, wall spectrum panels, rotating wireframes, speed streaks, a sweeping scanner frame, scanlines, viewport brackets and a depth ruler. Switching in triggers a warp burst. Day/Night use the same canvas as a quiet dot lattice
-- Scramble-decode name, scroll-driven instrument, scan-wipe "system shift" between sections, live HUD readout
-- Precision targeting cursor (fine pointers only): INSPECT on projects, OPEN on external links
-- `prefers-reduced-motion` respected, responsive layout, SEO metadata from settings
+**Public site (multi-page)**
+- Routes: `/` (System), `/work`, `/work/[slug]` (project expedition), `/lab`, `/about`, `/contact`
+- Colour-wipe transitions between pages; boot sequence once per session
+- Three environments from the switch: **Day** (warm paper, cobalt/coral/emerald/amber/orchid), **Night** (deep ink, cyan/magenta/lime/amber/violet, drifting aurora), **Field** (a pseudo-3D laboratory corridor you walk down by scrolling)
+- Every project gets its own hue and an animated generated visual by `visualType`: flow, conversation, sensor, geometry, architecture, default
+- Effects: scramble-decode name, gradient hero type, split-word heading reveals, 3D card tilt with glare, magnetic buttons, cursor spotlight, targeting cursor, live HUD, scrolling marquee
+- Field mode: ceiling lights, wall spectrum panels, tumbling wireframes, speed streaks, scanner frame, target lock on hovered projects, scanlines and viewport brackets
+- Reduced motion respected; responsive; SEO metadata from settings
 
 **Admin dashboard (`/admin`)**
 - Create, edit, delete and reorder: projects, project media, lab entries, skills, skill links, experience, social links
@@ -83,6 +79,7 @@ Contact form ──► /api/contact ──► Postgres ──► Brevo (email) �
     │   └── rate-limit.ts        # in-memory limiter
     ├── components/
     │   ├── Boot.tsx             # boot sequence
+    │   ├── Nav.tsx, ProjectTile.tsx, Motif.tsx, Split.tsx, PageHead.tsx, PageNext.tsx, Footer.tsx, Marquee.tsx
     │   ├── FieldCanvas.tsx      # lattice / Field-mode flow field
     │   ├── Fx.tsx               # reveals + system-shift transition
     │   ├── Scramble.tsx, Hud.tsx, Stage.tsx
@@ -274,7 +271,8 @@ Project status values: `live`, `beta`, `in_development`, `prototype`, `archived`
 | Upload fails | No Blob store connected, or no redeploy after connecting |
 | Contact saved but no email | Brevo sender unverified or wrong API key (check Vercel function logs) |
 | Emails land in spam | Free-provider sender via Brevo fails DMARC. Verify your own domain in Brevo |
-| Build fails on fonts | Network blocked to Google Fonts. Build where it's reachable |
+| Build fails on fonts | Network blocked to Google Fonts (Geist Mono). Build where it's reachable |
+| Headlines show a fallback font | Fontshare CDN blocked (ad-blocker or offline). Fonts load at runtime from api.fontshare.com |
 
 ---
 
