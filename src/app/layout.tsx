@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Bricolage_Grotesque, Martian_Mono } from "next/font/google";
+import { Sora, IBM_Plex_Mono } from "next/font/google";
 import { getSettings } from "@/lib/content";
 import Stage from "@/components/Stage";
 import "./globals.css";
 
-const sans = Bricolage_Grotesque({ subsets: ["latin"], variable: "--font-sans", display: "swap" });
-const mono = Martian_Mono({ subsets: ["latin"], variable: "--font-mono", display: "swap" });
+const sans = Sora({ subsets: ["latin"], variable: "--font-sans", display: "swap" });
+const mono = IBM_Plex_Mono({ subsets: ["latin"], weight: ["300", "400", "500"], variable: "--font-mono", display: "swap" });
 
 export async function generateMetadata(): Promise<Metadata> {
   const s = await getSettings().catch(() => ({} as Record<string, any>));

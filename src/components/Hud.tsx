@@ -11,6 +11,7 @@ export default function Hud() {
     <div className="hud mono" aria-hidden>
       <span>UTC+6 {t}</span>
       <span id="hud-xy">X 0000  Y 0000</span>
+      <span id="hud-z">ENV</span>
     </div>
   );
 }

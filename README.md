@@ -2,7 +2,7 @@
 
 A CMS-driven personal portfolio built like a research-facility interface: boot sequence, targeting cursor, day/night environments, a project observatory and per-project "expedition" pages. All content is edited from a built-in admin dashboard. No code changes are needed for content updates.
 
-**Stack:** Next.js 15 (App Router) · React 19 · TypeScript · Drizzle ORM · Neon Postgres · Vercel Blob · Brevo · Zod · jose (JWT) · argon2
+**Stack:** Sora + IBM Plex Mono · Next.js 15 (App Router) · React 19 · TypeScript · Drizzle ORM · Neon Postgres · Vercel Blob · Brevo · Zod · jose (JWT) · argon2
 
 **Running cost:** $0 on free tiers.
 
@@ -36,7 +36,7 @@ A CMS-driven personal portfolio built like a research-facility interface: boot s
 - Project observatory, plus an expedition page per project (Problem, System, Architecture, Implementation, Result, Live system)
 - Animated architecture flow rendered from data
 - Lab section, About with grouped skills, and a contact form with an animated INPUT → ENCRYPT → TRANSMIT → RECEIVED pipeline
-- **Field mode:** a full-screen canvas flow field that swirls around the cursor and re-organises around any project row you hover; chromatic type distortion follows the pointer. In Day/Night the same canvas is a quiet dot lattice
+- **Field mode:** a pseudo-3D laboratory corridor on one canvas. Scrolling walks you down it, the cursor turns your head, hovering a project energises the lab and locks a targeting frame onto it. Ceiling lights, wall spectrum panels, rotating wireframes, speed streaks, a sweeping scanner frame, scanlines, viewport brackets and a depth ruler. Switching in triggers a warp burst. Day/Night use the same canvas as a quiet dot lattice
 - Scramble-decode name, scroll-driven instrument, scan-wipe "system shift" between sections, live HUD readout
 - Precision targeting cursor (fine pointers only): INSPECT on projects, OPEN on external links
 - `prefers-reduced-motion` respected, responsive layout, SEO metadata from settings
