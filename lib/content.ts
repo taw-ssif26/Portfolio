@@ -1,0 +1,28 @@
+export type Rec = Record<string, string>
+export type Content = { p: Rec; systems: Rec[]; experiments: Rec[]; currently: Rec[]; archive: Rec[] }
+export const DEFAULT: Content = {
+  p: { lead: "I build things because I want to understand how they work.", sub: "Automation, Python and AI systems that turn repetitive work into processes that think a little.", location: "Chattogram, Bangladesh", focus: "Intelligent systems", state: "Learning. Building. Experimenting.", signal: "I build the systems that do the boring work, so people can spend their time on the work that matters.", philo: "I like building the things that make other things easier to build.", aboutq: "Who is behind the systems?", about: "Write two honest sentences about yourself here: /admin, then Profile.", curious: "Currently obsessed with: making AI systems that fail gracefully.", github: "https://github.com/taw-ssif26", linkedin: "", portfolio: "https://tawsif-dev.vercel.app", photo: "" },
+  systems: [
+    { name: "ChatbotForWeb", type: "AI website assistance", status: "ACTIVE", tech: "FastAPI, PostgreSQL, Claude API, retrieval", desc: "Lets a website owner embed an assistant that answers from their own content.", input: "website content", process: "retrieval + AI", output: "interactive assistant", problem: "Visitors leave when they cannot find answers that already exist on the site.", thesis: "An assistant grounded only in the owner’s content is more useful than a generic chatbot.", architecture: "Crawl, chunk, embed, retrieve, answer with Claude, embeddable widget.", build: "", decisions: "", result: "", lessons: "", live: "", source: "" },
+    { name: "SheetMail", type: "Email automation", status: "ACTIVE", tech: "Python, Google Sheets API, n8n", desc: "Turns spreadsheet rows into personalised emails.", input: "rows in a sheet", process: "template + AI personalisation", output: "sent, logged emails", problem: "", thesis: "", architecture: "", build: "", decisions: "", result: "", lessons: "", live: "", source: "" },
+    { name: "White-Collar English Care", type: "Web application", status: "ACTIVE", tech: "FastAPI, PostgreSQL, React", desc: "A management platform built for a coaching centre.", input: "students, batches, payments", process: "role-based workflows", output: "one place to run the centre", problem: "", thesis: "", architecture: "", build: "", decisions: "", result: "", lessons: "", live: "", source: "" },
+    { name: "ArchVision", type: "Computer vision", status: "PAUSED", tech: "Python, OpenCV", desc: "Reads a floorplan and estimates quantities from its geometry.", input: "floorplan image", process: "geometry extraction", output: "estimate", problem: "", thesis: "", architecture: "", build: "", decisions: "", result: "", lessons: "", live: "", source: "" },
+    { name: "Clinibook", type: "Web application", status: "ACTIVE", tech: "FastAPI, PostgreSQL, React", desc: "Clinic management with admin, doctor and patient panels.", input: "appointments, records", process: "role-based panels", output: "a running clinic", problem: "", thesis: "", architecture: "", build: "", decisions: "", result: "", lessons: "", live: "", source: "" },
+  ],
+  experiments: [
+    { date: "2026 / 11", idea: "Self-healing n8n retries", status: "ITERATING", line: "A workflow that reads its own error log and picks a retry strategy." },
+    { date: "2026 / 10", idea: "Floorplan line detector", status: "PAUSED", line: "Wall detection works on clean drawings and fails on scans." },
+    { date: "2026 / 09", idea: "Prompt regression tests", status: "BROKEN", line: "Compares model answers across versions. Currently compares nothing." },
+  ],
+  currently: [{ k: "BUILDING", v: "This site, and a monitoring tool for n8n workflows" }, { k: "LEARNING", v: "Retrieval quality and evaluation" }, { k: "EXPLORING", v: "Agents that ask before they act" }, { k: "THINKING ABOUT", v: "What makes an automation worth paying for" }],
+  archive: [{ date: "2026 / 11", kind: "project", text: "Started the AI Foundry portfolio." }, { date: "2026 / 10", kind: "lesson", text: "Logging first, features second." }, { date: "2026 / 09", kind: "experiment", text: "First prompt regression harness." }],
+}
+type F = [string, string, string?]
+export const SCH: Record<string, F[]> = {
+  p: [["lead", "Hero line", "a"], ["sub", "Hero sub-line", "a"], ["location", "Location"], ["focus", "Focus"], ["state", "Current state"], ["signal", "Signal statement", "a"], ["philo", "Philosophy statement", "a"], ["aboutq", "About heading"], ["about", "About text", "a"], ["curious", "Personal detail", "a"], ["github", "GitHub URL"], ["linkedin", "LinkedIn URL"], ["portfolio", "Portfolio URL"], ["photo", "Photo", "img"]],
+  systems: [["name", "Name"], ["type", "Type"], ["status", "Status", "s:ACTIVE|BETA|PAUSED|ARCHIVED"], ["tech", "Technology"], ["desc", "Description", "a"], ["input", "Input"], ["process", "Process"], ["output", "Output"], ["problem", "Problem", "a"], ["thesis", "Thesis", "a"], ["architecture", "Architecture", "a"], ["build", "Build", "a"], ["decisions", "Decisions", "a"], ["result", "Result", "a"], ["lessons", "Lessons", "a"], ["live", "Live link"], ["source", "Source link"]],
+  experiments: [["date", "Date (YYYY / MM)"], ["idea", "Idea"], ["status", "Status", "s:RUNNING|PAUSED|BROKEN|ITERATING|ARCHIVED"], ["line", "One sentence", "a"]],
+  currently: [["k", "Label", "s:BUILDING|LEARNING|EXPLORING|THINKING ABOUT"], ["v", "Text"]],
+  archive: [["date", "Date (YYYY / MM)"], ["kind", "Kind", "s:project|idea|experiment|achievement|lesson"], ["text", "Entry"]],
+}
+export const byDate = (a: Rec[]) => [...a].sort((x, y) => String(y.date).localeCompare(String(x.date)))
